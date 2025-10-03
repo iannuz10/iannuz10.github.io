@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Trajectory Tracking Control</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Mobile Robotics: Trajectory Tracking Control for 2D Robots</h1>
+            <p class="project-tagline">A comparative study and implementation of non-linear control laws in MATLAB/Simulink to solve the trajectory tracking problem for differential-drive and bicycle-kinematic robots.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/control-main-banner.png" alt="Trajectory Tracking Simulation" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> Trajectory tracking is a fundamental capability for autonomous mobile robots. However, real-world factors like imperfectly known robot parameters (calibration errors) and physical motor limitations (actuator saturation) can severely degrade controller performance.</li>
+                    <li><strong>Task:</strong> To implement and compare two different non-linear control laws—Static Feedback linearization and a Lyapunov-based approach—for two common robot models (differential drive and bicycle). The primary goal was to analyze their trajectory tracking performance and, crucially, their robustness to the aforementioned real-world issues.</li>
+                    <li><strong>Action:</strong> I implemented both control laws for each robot model within a MATLAB & Simulink simulation environment. The process involved tuning controller gains for optimal performance on a reference trajectory. Then, I systematically tested the controllers' robustness by injecting a 30% calibration error into the wheel radius and by simulating wheel velocity saturation.</li>
+                    <li><strong>Result:</strong> While both controllers successfully tracked the trajectory under ideal conditions, the analysis clearly demonstrated that the Lyapunov-based controller was significantly more robust. It maintained better tracking performance in the presence of model errors and actuator limits. This conclusion, that the "Lyapunov control scheme has the potential to perform better in real-world scenarios," formed the core finding of our final lab report.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        The project explored two common kinematic models for mobile robots: the <strong>differential drive (2-0) robot</strong> and the <strong>bicycle-like (1-1) robot</strong>. For each model, two distinct control strategies were implemented to solve the trajectory tracking problem.
+                    </p>
+                    <ol>
+                        <li><strong>Static Feedback Control:</strong> This approach uses input-output linearization. The goal is to define an error variable (e.g., the position of a point in front of the robot) and compute the control inputs (wheel velocities) that will drive this error to zero. It relies on inverting the robot's kinematic model, which can make it sensitive to modeling errors.</li>
+                        <li><strong>Lyapunov-based Control:</strong> This method is based on Lyapunov stability theory. An "energy function" (a Lyapunov function) is defined based on the posture error (position and orientation). A control law is then derived that guarantees this energy function will always decrease, ensuring the robot's error converges to zero. The energy function used was of the form $W = \frac{1}{2}(x_e^2 + y_e^2) + \frac{1}{\alpha}(\theta_e^2)$.</li>
+                    </ol>
+
+                    <h3>Core Implementation Details</h3>
+                    <p>
+                        The implementation was done entirely within <strong>MATLAB & Simulink</strong>. My role was to complete the provided templates by coding the core control logic and running the simulations.
+                    </p>
+                    <ul>
+                        <li><strong>Controller Implementation (`controller_Lyapunov_2_0.m`):</strong> For the Lyapunov controller, I implemented the calculation of the posture error in the robot's local frame ($x_e, y_e, \theta_e$). Based on these errors and the controller gains (`k1`, `k2`, `k3`), I then computed the required linear velocity `v` and angular velocity `w` that would ensure the derivative of the Lyapunov function ($\dot{W}$) was negative semi-definite, guaranteeing stability.</li>
+                        <li><strong>Parameter Tuning:</strong> A critical part of the lab was the hands-on tuning of controller gains (e.g., `Kp` for static feedback, `k1, k2, k3` for Lyapunov) to achieve a balance between fast convergence and smooth, stable behavior.</li>
+                        <li><strong>Robustness Analysis:</strong> The core of the analysis was testing the controllers under non-ideal conditions. This was done in two ways:
+                            <ol>
+                                <li><strong>Calibration Error:</strong> The wheel radius parameter in the simulation model was increased by 30% relative to the value used by the controller, simulating an imperfectly calibrated robot.</li>
+                                <li><strong>Actuator Saturation:</strong> The commanded wheel velocities were passed through a saturation block in Simulink, limiting them to a maximum physical value.</li>
+                            </ol>
+                        </li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        The main challenge of the project was not just to make the robot follow a line, but to understand and compare *how* and *why* different controllers succeed or fail under realistic conditions.
+                    </p>
+                    <p>
+                        The solution was the systematic comparative analysis detailed in the final report. By plotting the trajectories and error metrics for both controllers side-by-side in both ideal and non-ideal scenarios, a clear conclusion emerged. The static feedback controller, which relies on perfect model inversion, performed poorly when the model was wrong (e.g., wrong wheel radius). In contrast, the Lyapunov-based controller, while also affected, was inherently more stable and maintained a much better tracking performance. As stated in our report, this demonstrated that the <strong>Lyapunov approach is comparatively more robust</strong> and better suited for real-world applications where perfect models are unattainable.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Project</p>
+                    <p><strong>Course:</strong> Mobile Robotics</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>MATLAB</li>
+                        <li>Simulink</li>
+                        <li>Control Theory</li>
+                        <li>Mobile Robotics</li>
+                        <li>Lyapunov Stability</li>
+                        <li>Non-linear Control</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
