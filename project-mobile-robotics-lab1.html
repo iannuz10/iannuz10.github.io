@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | EKF for Robot Localization</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Mobile Robotics: Extended Kalman Filter for 2D Localization</h1>
+            <p class="project-tagline">A hands-on project to implement and tune an Extended Kalman Filter (EKF) in MATLAB, fusing odometry and sensor data to accurately track a robot's position and orientation.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/ekf-main-banner.png" alt="EKF vs Odometry Path Comparison" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> Autonomous mobile robots suffer from cumulative errors in their odometry (wheel encoder data), leading to significant drift over time. To achieve accurate localization, they must fuse this internal data with external sensor measurements.</li>
+                    <li><strong>Task:</strong> To implement a complete Extended Kalman Filter (EKF) in MATLAB to solve this problem. This involved writing the non-linear evolution model, implementing the EKF's prediction and update steps, and tuning the filter's noise parameters for optimal performance.</li>
+                    <li><strong>Action:</strong> I implemented the robot's motion model based on its differential drive kinematics. I then completed the core EKF algorithm, coding the prediction step using the motion model and the update step using measurements from magnetic field sensors. A critical part of the work was the systematic tuning of the process noise ($Q_\alpha$) and measurement noise ($Q_\gamma$) covariance matrices to achieve a stable and accurate state estimate.</li>
+                    <li><strong>Result:</strong> The implemented EKF was successful. It significantly corrected the drift from pure odometry, providing a much more accurate and robust estimate of the robot's trajectory across various test datasets (e.g., `circles.txt`, `twoloops.txt`). The final tuned filter effectively balanced the confidence between the robot's motion model and the external sensor readings.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        The project centers on the implementation of an Extended Kalman Filter, a standard algorithm for state estimation in non-linear systems. The EKF linearizes the system around the current state estimate at each time step. The filter operates in a continuous predict-update cycle:
+                    </p>
+                    <ol>
+                        <li><strong>Prediction Step:</strong> The robot's state (its posture $[x, y, \theta]^T$) and its covariance (uncertainty) are propagated forward in time using the non-linear motion model derived from the robot's odometry.</li>
+                        <li><strong>Update Step:</strong> When an external measurement is available (i.e., the robot's sensor detects a magnet with a known world position), the Kalman gain is calculated. This gain determines how much the prediction should be corrected based on the innovation (the difference between the actual measurement and the predicted measurement). The state and covariance are then updated.</li>
+                    </ol>
+
+                    <h3>Core Implementation Details</h3>
+                    <p>
+                        My main contribution was to complete the core components of this EKF framework in MATLAB:
+                    </p>
+                    <ul>
+                        <li><strong>Motion Model (`EvolutionModel.m`):</strong> I implemented the non-linear function $X_{k+1} = f(X_k, U_k)$ which describes the robot's evolution. This function takes the current posture and the odometry inputs (distance and angle change) and computes the next posture, forming the basis of the prediction step.</li>
+                        <li><strong>EKF Algorithm (`MagnetLoc.m`):</strong> I completed the missing code for the main EKF loop, which involved:
+                            <ul>
+                                <li>Calculating the Jacobians of the evolution model ($A_k$) and the observation model ($C_k$) required for linearization.</li>
+                                <li>Implementing the covariance prediction equation: $P_{k+1|k} = A_k P_{k|k} A_k^T + Q_\alpha$.</li>
+                                <li>Implementing the state and covariance update equations after a measurement is received.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Filter Tuning (`DefineVariances.m`):</strong> This was a critical and practical part of the lab. I was responsible for determining the correct values for the noise covariance matrices. I analyzed the system to estimate the measurement noise variance ($Q_\gamma$) based on the sensor's physical properties (spacing of Reed sensors) and tuned the process noise parameters to account for odometry errors like wheel slippage.</li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        The biggest challenge in any Kalman Filter implementation is **tuning the filter**. If the filter is told to trust the odometry too much (low process noise), it will ignore valid sensor measurements and drift. If it trusts the sensors too much (low measurement noise), it can become overly sensitive to sensor errors and produce a jittery, inaccurate estimate.
+                    </p>
+                    <p>
+                        My solution was a methodical, data-driven tuning process. I started by estimating the measurement noise from the sensor's physical characteristics, as guided by the lab instructions. Then, I iteratively tested different values for the process noise parameters on various datasets. By analyzing the resulting plots (especially the innovation, or error between predicted and actual measurements), I could find a balance where the filter produced a smooth, drift-corrected path that was consistent with both the robot's motion and the ground-truth magnet locations. This hands-on tuning process was key to achieving a robust and accurate localization system.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Project</p>
+                    <p><strong>Course:</strong> Mobile Robotics</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>MATLAB</li>
+                        <li>Extended Kalman Filter</li>
+                        <li>State Estimation</li>
+                        <li>Robotics</li>
+                        <li>Sensor Fusion</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
