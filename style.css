@@ -345,19 +345,57 @@ code {
     font-size: 0.9em;
 }
 
-/* New styles for the Double Degree section */
-.education-item.wide-item {
-    /* This makes the item span two columns in the grid */
-    grid-column: span 2;
+/* Education Section */
+.education-section {
+    background-color: #fff; /* A slightly different background to make it stand out */
+}
+
+.education-grid {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;    /* Center the items horizontally */
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.education-item {
+    width: 100%;
+    max-width: 700px; /* Control the max width for a clean look */
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: center; /* Center text inside the cards */
+}
+
+.education-item h3 {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #333;
+}
+
+.education-item .university {
+    font-weight: 600;
+    color: #555;
+    margin: 5px 0;
+}
+
+.education-item .dates {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 20px;
 }
 
 .degree-split {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
     margin: 20px 0;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
-    padding: 15px 0;
+    padding: 20px 0;
+    gap: 20px;
 }
 
 .degree-item {
@@ -373,12 +411,27 @@ code {
 }
 
 .diploma-links-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* This is the fix for overlapping buttons */
+    gap: 15px; /* Adds space between buttons */
     margin-top: 20px;
-    text-align: center;
 }
 
-.diploma-links-container .diploma-link {
-    margin: 5px 10px;
+.diploma-link {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.diploma-link:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    color: #fff;
 }
 
 /* Responsive adjustment for the wide item on smaller screens */
