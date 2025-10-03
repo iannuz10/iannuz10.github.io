@@ -47,13 +47,13 @@
                     
                     <h3>System Architecture & Design</h3>
                     <p>
-                        The core of the project is the tight integration between a high-level task planner and a low-level motion planner. This was achieved using a concept called <strong>semantic attachments</strong>.
+                        The core of the project is the tight integration between a high-level, symbolic task planner and a low-level, geometric motion planner. This was achieved using a concept called <strong>semantic attachments</strong>.
                     </p>
                     <p>
-                        The task planner operates on a symbolic level, using the Planning Domain Definition Language (PDDL) to define actions like `goto_region` or `pick_up`. When the planner needs to evaluate the cost or feasibility of a motion-related action (e.g., the cost of moving from region A to B), it doesn't just use a fixed number. Instead, it calls an external C++ function—the motion planner. I overloaded the PDDL `(increase (total-cost) ...)` function to trigger this call.
+                        The task planner operates using the Planning Domain Definition Language (PDDL) to define abstract actions like `goto_region` or `pick_up`. When the planner needs to evaluate the cost or feasibility of a motion-related action (e.g., the cost of moving from region A to B), it doesn't use a fixed number. Instead, by overloading the PDDL `(increase (total-cost) ...)` function, it triggers an external call to my custom C++ motion planner.
                     </p>
                     <p>
-                        The custom-built motion planner then computes the optimal, collision-free path, returns its actual cost (e.g., path length) to the task planner, which uses this real-world cost to inform its search for the best overall plan.
+                        The motion planner then computes the optimal, collision-free path, returns its actual cost (e.g., path length) to the task planner, which uses this real-world cost to inform its search for the best overall plan. This ensures that the final task plan is not just symbolically correct, but also geometrically feasible.
                     </p>
 
                     <h3>Core Implementation Details</h3>
@@ -61,7 +61,7 @@
                         The motion planner was implemented from scratch in C++ and consists of two main components:
                     </p>
                     <ul>
-                        <li><strong>Pathfinding:</strong> I implemented <strong>Dijkstra's algorithm</strong> to find the shortest path on a 2D grid representing the environment. The `dijkstraPath` function takes the graph, target, and destination nodes as input and returns a vector of integers representing the nodes in the optimal path.</li>
+                        <li><strong>Pathfinding:</strong> I implemented <strong>Dijkstra's algorithm</strong> to find the shortest path on a 2D grid representing the environment. The `dijkstraPath` function takes the graph, source, and destination nodes as input and returns a vector of integers representing the nodes in the optimal path.</li>
                         <li><strong>Collision Avoidance:</strong> This was the most complex part of the implementation. The `checkCollision` function iterates through a robot's proposed path and compares it against the planned paths of all other robots, which are shared in a central map structure. It checks for two types of collisions:
                             <ol>
                                 <li><strong>Vertex Collision:</strong> Two robots occupying the same node at the same time step.</li>
@@ -72,10 +72,10 @@
 
                     <h3>Challenges & Solutions</h3>
                     <p>
-                        A primary challenge was designing a decentralized collision avoidance strategy that was both effective and not computationally prohibitive. A simple "first-come, first-served" approach could lead to deadlocks.
+                        A primary challenge was designing a decentralized collision avoidance strategy that was both effective and not computationally prohibitive. A simple "first-come, first-served" approach could easily lead to deadlocks where robots block each other indefinitely.
                     </p>
                     <p>
-                        My solution was a priority-based re-planning and waiting mechanism. When `checkCollision` detects a future conflict, the lower-priority robot's plan is invalidated from the point of collision. Its `MyShortestPath` function is then called again with a modified graph where the colliding node is temporarily "locked" (made inaccessible). If a valid alternative path is found, the plan is updated. If no alternative exists, the algorithm implements a <strong>wait maneuver</strong>: the robot pauses at the node just before the collision, allowing the higher-priority robot to pass before re-evaluating its path. This combination of re-routing and waiting proved effective in resolving conflicts in the tested scenarios.
+                        My solution was a priority-based re-planning and waiting mechanism. When `checkCollision` detects a future conflict, the lower-priority robot's plan is invalidated from the point of collision. Its pathfinding function is then called again with a modified graph where the colliding node is temporarily "locked" (made inaccessible). If a valid alternative path is found, the plan is updated. If no alternative exists, the algorithm implements a <strong>wait maneuver</strong>: the robot pauses at the node just before the collision, allowing the higher-priority robot to pass before re-evaluating its path. This combination of re-routing and waiting proved effective in resolving conflicts in the tested scenarios.
                     </p>
                 </div>
                 
