@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Multi-Robot Task-Motion Planning</title>
+    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a> <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Bachelor's Thesis: A Framework for Multi-Robot Task-Motion Planning</h1>
+            <p class="project-tagline">A C++ framework that integrates high-level symbolic task planning with low-level, collision-free motion planning to generate robust plans for multiple autonomous robots in a shared environment.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/tmp-main-banner.png" alt="Task and Motion Planning Architecture" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> Autonomous robots performing complex tasks need to reason about both the sequence of actions (task planning) and the physical feasibility of movement (motion planning). Treating these separately leads to inconsistent or failed plans.</li>
+                    <li><strong>Task:</strong> To design and implement an integrated Task-Motion Planning (TMP) framework in C++ that allows a symbolic task planner to generate plans that are geometrically valid and collision-free for multiple robots.</li>
+                    <li><strong>Action:</strong> I built a system where a PDDL-based task planner calls a custom motion planner via "semantic attachments." The motion planner, implemented from scratch, uses Dijkstra's algorithm to find optimal paths and incorporates a dynamic collision avoidance strategy where robots can lock nodes and perform waits to avoid conflicts.</li>
+                    <li><strong>Result:</strong> The framework successfully generated valid plans in simulations with varying numbers of robots and tasks. The work was formally recognized and presented at the <strong>4th Italian Conference on Robotics and Intelligent Machines (I-RIM 2022)</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        The core of the project is the tight integration between a high-level task planner and a low-level motion planner. This was achieved using a concept called <strong>semantic attachments</strong>.
+                    </p>
+                    <p>
+                        The task planner operates on a symbolic level, using the Planning Domain Definition Language (PDDL) to define actions like `goto_region` or `pick_up`. When the planner needs to evaluate the cost or feasibility of a motion-related action (e.g., the cost of moving from region A to B), it doesn't just use a fixed number. Instead, it calls an external C++ function—the motion planner. I overloaded the PDDL `(increase (total-cost) ...)` function to trigger this call.
+                    </p>
+                    <p>
+                        The custom-built motion planner then computes the optimal, collision-free path, returns its actual cost (e.g., path length) to the task planner, which uses this real-world cost to inform its search for the best overall plan.
+                    </p>
+
+                    <h3>Core Implementation Details</h3>
+                    <p>
+                        The motion planner was implemented from scratch in C++ and consists of two main components:
+                    </p>
+                    <ul>
+                        <li><strong>Pathfinding:</strong> I implemented <strong>Dijkstra's algorithm</strong> to find the shortest path on a 2D grid representing the environment. The `dijkstraPath` function takes the graph, target, and destination nodes as input and returns a vector of integers representing the nodes in the optimal path.</li>
+                        <li><strong>Collision Avoidance:</strong> This was the most complex part of the implementation. The `checkCollision` function iterates through a robot's proposed path and compares it against the planned paths of all other robots, which are shared in a central map structure. It checks for two types of collisions:
+                            <ol>
+                                <li><strong>Vertex Collision:</strong> Two robots occupying the same node at the same time step.</li>
+                                <li><strong>Edge Collision:</strong> Two robots crossing each other on the same edge between two time steps.</li>
+                            </ol>
+                        </li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        A primary challenge was designing a decentralized collision avoidance strategy that was both effective and not computationally prohibitive. A simple "first-come, first-served" approach could lead to deadlocks.
+                    </p>
+                    <p>
+                        My solution was a priority-based re-planning and waiting mechanism. When `checkCollision` detects a future conflict, the lower-priority robot's plan is invalidated from the point of collision. Its `MyShortestPath` function is then called again with a modified graph where the colliding node is temporarily "locked" (made inaccessible). If a valid alternative path is found, the plan is updated. If no alternative exists, the algorithm implements a <strong>wait maneuver</strong>: the robot pauses at the node just before the collision, allowing the higher-priority robot to pass before re-evaluating its path. This combination of re-routing and waiting proved effective in resolving conflicts in the tested scenarios.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Date:</strong> 2022</p>
+                    <p><strong>Type:</strong> Bachelor's Thesis</p>
+                    <p><strong>Institution:</strong> University of Genoa</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>C++</li>
+                        <li>AI Planning</li>
+                        <li>PDDL</li>
+                        <li>Dijkstra's Algorithm</li>
+                        <li>Data Structures</li>
+                        <li>ROS (for planning framework)</li>
+                        <li>Git</li>
+                    </ul>
+
+                    <div class="sidebar-links">
+                        <a href="https://ieeexplore.ieee.org/document/9975765" target="_blank" class="details-button">View Conference Paper</a>
+                        <a href="https://github.com/iannuz10/Multi-Robot-Task-Motion-planning" target="_blank" class="details-button">View Project on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
