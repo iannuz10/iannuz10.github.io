@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Computer Vision for Robotics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Computer Vision for Robotics</h1>
+            <p class="project-tagline">A series of three hands-on laboratory projects covering camera geometry, feature-based tracking, and deep learning for image classification.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/covis-main-banner.png" alt="Computer Vision Labs Banner" class="project-banner-image">
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Project Overview</h2>
+                    <p>
+                        This collection of labs from the "Computer Vision for Robotics" course provided practical experience with the core techniques that allow robots to perceive and interpret the world. The projects were implemented in <strong>Python</strong> and covered three distinct areas: calibrating a camera's intrinsic properties, tracking objects using feature detection, and classifying images using a neural network.
+                    </p>
+
+                    <hr>
+
+                    <h3>Lab 1: Camera Calibration using Zhang's Method</h3>
+                    <p>
+                        <strong>Goal:</strong> To implement the classic Zhang's method to determine a camera's intrinsic matrix (focal length, principal point) from multiple images of a planar chessboard pattern.
+                        <br><strong>Technical Deep Dive:</strong> The task was to compute the homography that maps the 3D points on the chessboard plane to their corresponding 2D pixel coordinates in each image. Each homography provides two constraints on the camera's intrinsic parameters. By taking at least 3 images of the chessboard from different orientations, an over-determined system of linear equations is formed. I implemented the Python code to solve this system and extract the intrinsic matrix `K`. A key step was implementing data normalization to improve the numerical stability of the homography calculation, as described in the original paper.
+                    </p>
+
+                    <h3>Lab 2: Feature-Based Single-Object Tracking</h3>
+                    <p>
+                        <strong>Goal:</strong> To develop a simple single-object tracking algorithm using local feature matching and homography estimation.
+                        <br><strong>Technical Deep Dive:</strong> The algorithm was implemented in Python using <strong>OpenCV</strong>. First, I used the ORB (Oriented FAST and Rotated BRIEF) algorithm to detect keypoints and compute their descriptors on a manually-selected object in the first frame. Then, for every subsequent frame, new keypoints were detected and matched against the initial set. Using these matches, `cv2.findHomography` was called to compute the transformation matrix that maps the object from its original position to its new position. Finally, `cv2.perspectiveTransform` was used to apply this homography to the corners of the initial bounding box, effectively tracking the object's location and orientation in the video.
+                    </p>
+
+                    <h3>Lab 3: Deep Learning for Image Classification</h3>
+                    <p>
+                        <strong>Goal:</strong> To build, train, and evaluate a simple Multi-Layer Perceptron (MLP) for classifying handwritten digits from the MNIST dataset using <strong>PyTorch</strong>.
+                        <br><strong>Technical Deep Dive:</strong> This project involved the complete deep learning workflow. I implemented a custom `Dataset` class to load and transform the MNIST images and labels. I defined the MLP architecture as a `torch.nn.Module`, consisting of two linear layers with a ReLU activation function. The model was trained using the Cross-Entropy Loss function and an Adam optimizer. The implementation involved writing a complete training loop that iterates over the dataset in mini-batches, performs the forward and backward passes, and updates the model's weights. The final trained model was then evaluated on the test set to measure its classification accuracy.
+                    </p>
+
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Projects</p>
+                    <p><strong>Course:</strong> Computer Vision for Robotics</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Python</li>
+                        <li>OpenCV</li>
+                        <li>PyTorch</li>
+                        <li>NumPy</li>
+                        <li>Computer Vision</li>
+                        <li>Deep Learning</li>
+                        <li>Image Processing</li>
+                        <li>Camera Calibration</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
