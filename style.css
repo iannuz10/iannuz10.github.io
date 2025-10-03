@@ -345,6 +345,53 @@ code {
     font-size: 0.9em;
 }
 
+/* New styles for the Double Degree section */
+.education-item.wide-item {
+    /* This makes the item span two columns in the grid */
+    grid-column: span 2;
+}
+
+.degree-split {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.degree-item {
+    text-align: center;
+}
+
+.degree-item h4 {
+    margin-bottom: 5px;
+}
+
+.degree-item p {
+    margin: 0;
+}
+
+.diploma-links-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.diploma-links-container .diploma-link {
+    margin: 5px 10px;
+}
+
+/* Responsive adjustment for the wide item on smaller screens */
+@media (max-width: 768px) {
+    .education-item.wide-item {
+        grid-column: span 1; /* Stack them normally on mobile */
+    }
+    .degree-split {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
 /* Responsive adjustments for subpage */
 @media (max-width: 900px) {
     .project-detail-grid {
