@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Software Architecture for Robotics (ROS2)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Software Architecture for Robotics (ROS2)</h1>
+            <p class="project-tagline">A collection of five academic projects focused on mastering the Robot Operating System (ROS2) framework, from fundamental concepts to advanced applications in manipulation and navigation.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/ros-main-banner.png" alt="ROS2 Projects Banner" class="project-banner-image">
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Project Overview</h2>
+                    <p>
+                        This series of five labs for the "Software Architecture for Robotics" course provided a comprehensive, hands-on introduction to developing robust robotic systems using ROS2. The projects progressed from core concepts like package management and node communication to complex tasks involving a 7-DOF Baxter robot arm and the powerful Navigation2 stack. The primary languages used were <strong>C++ and Python</strong>.
+                    </p>
+
+                    <hr>
+
+                    <h3>Lab 1: Packages, Launch Files & Remapping</h3>
+                    <p>
+                        <strong>Goal:</strong> To master the fundamental building blocks of a ROS2 application. This lab focused on creating packages, writing nodes, and using launch files to manage complex applications.
+                        <br><strong>Implementation:</strong> The main task was to create a `move_joint` package with a C++ node that could publish commands to a single joint of the Baxter robot. The key challenge was to then write a Python launch file that could run this node with arguments, allowing it to control *any* joint without changing the C++ code. This involved using namespaces and topic remapping to avoid conflicts when launching multiple instances of the same node.
+                    </p>
+
+                    <h3>Lab 2: The "Mirror Arm" Node</h3>
+                    <p>
+                        <strong>Goal:</strong> To create a C++ node that makes the Baxter robot's left arm mirror the movements of its right arm in real-time.
+                        <br><strong>Implementation:</strong> This required writing a node that subscribes to the `/robot/joint_states` topic to get the current positions of all joints. Inside the node's callback, the positions for the right arm's joints were extracted. Then, applying a simple transformation (e.g., negating some values for symmetrical movement), the corresponding joint commands for the left arm were calculated and published to the appropriate command topic. This project was a practical exercise in managing publisher/subscriber logic and understanding robot kinematics.
+                    </p>
+
+                    <h3>Lab 3: The "Puppet Arm" Node</h3>
+                    <p>
+                        <strong>Goal:</strong> To implement a more advanced control scheme where the left arm maintains a constant 3D transform relative to the right arm (puppeteering).
+                        <br><strong>Implementation:</strong> This was significantly more complex than the mirror node. Instead of just copying joint angles, this node had to:
+                        <ol>
+                            <li>Use the <strong>TF2 library</strong> to look up the current 3D transform (position and orientation) of the right gripper in the robot's base frame.</li>
+                            <li>Calculate the desired 3D transform for the left gripper based on the puppeteering offset.</li>
+                            <li>Call an <strong>Inverse Kinematics (IK) service</strong> provided by Baxter to convert this desired 3D Cartesian pose for the left gripper into the required 7 joint angles.</li>
+                            <li>Publish these joint angles as a command to the left arm.</li>
+                        </ol>
+                        This project demonstrated skills in using TF2 for coordinate transformations and interacting with ROS2 services.
+                    </p>
+                    
+                    <h3>Lab 4: The Navigation Stack (Nav2)</h3>
+                    <p>
+                        <strong>Goal:</strong> To configure and launch the complete ROS2 Navigation Stack (Nav2) for a mobile robot (BB-8) in a known environment.
+                        <br><strong>Implementation:</strong> This lab focused on system integration and configuration. The task involved writing a master launch file that could spawn multiple robots and correctly launch all the necessary Nav2 components for one of them, including:
+                        <ul>
+                            <li><strong>Map Server:</strong> To load a pre-made map of the environment.</li>
+                            <li><strong>AMCL (Adaptive Monte Carlo Localization):</strong> To localize the robot on the map using laser scan data.</li>
+                            <li><strong>Planner and Controller Servers:</strong> To compute a global path to a goal and a local trajectory to follow that path while avoiding obstacles.</li>
+                        </ul>
+                        The challenge was to use namespaces and remapping to ensure that a multi-robot simulation could run without topic or frame collisions.
+                    </p>
+
+                    <h3>Lab 5: Gazebo and Robot Descriptions (URDF)</h3>
+                    <p>
+                        <strong>Goal:</strong> To understand how robots are modeled for simulation by creating a robot description file (URDF) and launching it in the Gazebo dynamic simulator.
+                        <br><strong>Implementation:</strong> This project involved learning the URDF (Unified Robot Description Format) syntax, which uses XML to define a robot's physical properties. The main tasks were to define the robot's `links` (its physical parts) and `joints` (which connect the links), including their visual and inertial properties. The final step was to create a launch file that starts the Gazebo simulator and spawns the custom-built robot model into the simulated world.
+                    </p>
+
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Projects</p>
+                    <p><strong>Course:</strong> Software Architecture for Robotics</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>ROS2 (Foxy/Galactic/Humble)</li>
+                        <li>C++</li>
+                        <li>Python</li>
+                        <li>Gazebo Simulator</li>
+                        <li>URDF / Xacro</li>
+                        <li>Navigation2 Stack</li>
+                        <li>TF2 (Transform Library)</li>
+                        <li>Launch Files</li>
+                        <li>CMake</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy: 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
