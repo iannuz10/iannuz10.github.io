@@ -335,6 +335,16 @@ footer {
     margin-bottom: 10px;
 }
 
+/* Styling for code elements */
+code {
+    background-color: #e9ecef;
+    color: #c7254e;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
 /* Responsive adjustments for subpage */
 @media (max-width: 900px) {
     .project-detail-grid {
