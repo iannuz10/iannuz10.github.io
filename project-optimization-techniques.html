@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Optimization Techniques</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Optimization Techniques Laboratory</h1>
+            <p class="project-tagline">A series of two practical labs focused on implementing and comparing classical and modern optimization algorithms for unconstrained problems and sparse recovery.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/optec-main-banner.png" alt="Optimization Labs Banner" class="project-banner-image">
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Project Overview</h2>
+                    <p>
+                        This series of labs for the "Optimization Techniques" course provided a hands-on implementation of core numerical optimization methods in <strong>Python</strong> using Jupyter Notebooks. The projects moved from foundational gradient-based algorithms to advanced techniques like L1 regularization for solving real-world signal processing problems.
+                    </p>
+
+                    <hr>
+
+                    <h3>Lab 1: Unconstrained Nonlinear Optimization</h3>
+                     <div class="star-summary-box" style="margin-top: 20px;">
+                        <ul>
+                            <li><strong>Situation:</strong> Many problems in engineering and machine learning can be framed as minimizing an objective function. For quadratic functions of the form $f(x) = ||Ax-b||_2^2$, several iterative, gradient-based methods exist with different convergence properties.</li>
+                            <li><strong>Task:</strong> To implement and compare the performance of three fundamental optimization algorithms: Steepest Descent (with optimal step size), the Heavy Ball method, and the Conjugate Gradient method.</li>
+                            <li><strong>Action:</strong> I implemented each algorithm from scratch in Python. For each method, I coded the iterative update rule to generate a sequence of iterates $\{x_k\}$ that converge to the minimum. A key part was deriving and implementing the optimal step size for Steepest Descent and the optimal parameters for the Heavy Ball method.</li>
+                            <li><strong>Result:</strong> The final analysis and plots clearly demonstrated the superior convergence rate of the Conjugate Gradient and Heavy Ball methods over the basic Steepest Descent, which exhibited classic zigzagging behavior. The Conjugate Gradient method converged in the fewest iterations, validating its theoretical efficiency for quadratic problems.</li>
+                        </ul>
+                    </div>
+                    <h4>Technical Deep Dive</h4>
+                    <p>
+                        The core of this lab was the implementation of the update rules for each algorithm.
+                    </p>
+                    <ul>
+                        <li><strong>Steepest Descent:</strong> The update is $x_{k+1} = x_k - t \nabla f(x_k)$. I derived the optimal step size $t$ by analytically solving $\min_t f(x_k - t \nabla f(x_k))$, which yielded $t = \frac{\nabla f(x_k)^T \nabla f(x_k)}{\nabla f(x_k)^T (A^T A) \nabla f(x_k)}$.</li>
+                        <li><strong>Heavy Ball Method:</strong> This method adds a "momentum" term to the update rule: $x_{k+1} = x_k - t \nabla f(x_k) + \beta(x_k - x_{k-1})$. The challenge was to implement the optimal parameters for $t$ and $\beta$ based on the smallest ($\lambda_{min}$) and largest ($\lambda_{max}$) eigenvalues of the Hessian ($A^T A$), as derived in the course.</li>
+                        <li><strong>Conjugate Gradient:</strong> This method constructs a sequence of search directions $d_k$ that are A-orthogonal. The implementation involved iteratively computing the step size $\alpha_k$, the next iterate $x_{k+1}$, the residual $r_{k+1}$, and the next search direction $d_{k+1} = -r_{k+1} + \beta_k d_k$.</li>
+                    </ul>
+
+                    <hr>
+
+                    <h3>Lab 2: Sparse Recovery using L1 Regularization (LASSO)</h3>
+                     <div class="star-summary-box" style="margin-top: 20px;">
+                        <ul>
+                            <li><strong>Situation:</strong> In signal processing, we often want to find a sparse representation of a signal within a dictionary of basis functions. Standard least squares ($||Ax-b||_2^2$) finds a solution but does not enforce sparsity (most elements of $x$ being zero).</li>
+                            <li><strong>Task:</strong> To use L1 regularization (the LASSO problem) to identify the constituent notes of a musical chord from its time-domain signal. The goal was to recover a sparse vector $x$ where non-zero elements correspond to the active notes in a dictionary $A$.</li>
+                            <li><strong>Action:</strong> I first constructed a dictionary matrix `A` where columns represented sampled sine and cosine waves at the frequencies of a musical scale. I then formulated the optimization problem as $\min_x ||Ax - b||_2^2 + c||x||_1$, where $b$ is the recorded chord signal and $c$ is the regularization parameter. This problem was solved using SciPy's `minimize` function.</li>
+                            <li><strong>Result:</strong> The L1-regularized approach was highly successful. Unlike simple least squares, it produced a sparse solution vector where only the coefficients corresponding to the actual notes present in the chord were non-zero. By tuning the regularization parameter `c`, I was able to effectively filter out noise and perfectly identify the notes.</li>
+                        </ul>
+                    </div>
+                    <h4>Technical Deep Dive</h4>
+                    <p>
+                        The key insight of this lab is that the L1-norm penalty encourages sparsity in the solution vector. The problem was to find the notes in a chord, which is equivalent to solving for $x$ in the overdetermined system $Ax \approx b$.
+                    </p>
+                    <ul>
+                        <li><strong>Dictionary Construction:</strong> I created a matrix `A` of size `(401, 24)`. The first 12 columns were cosine waves and the last 12 were sine waves, each corresponding to one of the 12 notes in an octave, sampled at 200 Hz for 2 seconds.</li>
+                        <li><strong>L1 vs. L2 Regularization:</strong> A preliminary analysis showed why L2 regularization (Ridge regression) is unsuitable for this task, as it shrinks all coefficients towards zero but rarely makes them exactly zero. The L1 penalty, due to the shape of its norm, is known to produce truly sparse solutions.</li>
+                        <li><strong>Solving with SciPy:</strong> The LASSO objective function is non-differentiable at zero, so standard gradient descent is not sufficient. The lab utilized the power of SciPy's `minimize` function with the SLSQP (Sequential Least Squares Programming) solver, which can handle such problems. By providing the objective function, its Jacobian, and the appropriate constraints, the solver efficiently found the sparse solution vector representing the musical notes.</li>
+                    </ul>
+
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Projects</p>
+                    <p><strong>Course:</strong> Optimization Techniques</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Python</li>
+                        <li>NumPy</li>
+                        <li>SciPy.optimize</li>
+                        <li>Matplotlib</li>
+                        <li>Jupyter Notebook</li>
+                        <li>Numerical Optimization</li>
+                        <li>Linear Algebra</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
