@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | AI for IVF Research</title>
+    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a> <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Research Fellowship: Applying AI to Oocyte Analysis in IVF Procedures</h1>
+            <p class="project-tagline">An end-to-end research project that culminated in a peer-reviewed publication, a custom data-labeling web application, and a proof-of-concept machine learning model to improve objectivity in fertility treatments.</p>
+        </section>
+
+        <section class="project-detail-content">
+            <img src="images/research-main-banner.png" alt="IVF Research Project Banner" class="project-banner-image">
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>The Challenge (Situation & Task)</h2>
+                    <p>
+                        [cite_start]The success of In Vitro Fertilisation (IVF) heavily depends on the quality of the oocyte (egg cell), but its assessment is a highly subjective process led by embryologists[cite: 1689]. [cite_start]This lack of objectivity can lead to inconsistent outcomes[cite: 1690]. The goal of my research fellowship was to investigate how Artificial Intelligence could bring standardization and data-driven insights to this critical step of the IVF workflow.
+                    </p>
+                    
+                    <h2>My Contributions (Action)</h2>
+                    <p>
+                        During the fellowship, I undertook a multi-faceted approach, leading three core initiatives from conception to completion:
+                    </p>
+                    
+                    <h3>1. Systematic Literature Review & Publication</h3>
+                    <p>
+                        [cite_start]I conducted a rigorous, systematic review of all existing literature on the application of AI to oocyte quality assessment[cite: 1712]. [cite_start]This involved defining research questions, formulating database queries, and applying a multi-stage screening and quality assessment process following PRISMA guidelines[cite: 1715]. The synthesis of this research formed the basis of a scientific paper.
+                        [cite_start]<br><strong>Outcome:</strong> I was the first author of the peer-reviewed paper **"On the role of artificial intelligence in analysing oocytes during in vitro fertilisation procedures,"** published in the Elsevier journal *Artificial Intelligence in Medicine*[cite: 1591, 1597].
+                    </p>
+
+                    <h3>2. Data Labeling Web Application (Project: MMS)</h3>
+                    <p>
+                        [cite_start]A major challenge identified in the research is the lack of high-quality, annotated datasets for training AI models[cite: 1845]. To address this, I developed **MMS (Mouse Maturation Stage)**, a full-stack web application that provides a user-friendly interface for embryologists to upload and label videos of oocyte maturation.
+                        <br>Built with a <strong>Python/Flask</strong> backend and a standard <strong>HTML/CSS/JS</strong> frontend, this tool was crucial for creating the structured, labeled dataset required for the next phase of the project.
+                    </p>
+
+                    <h3>3. AI Model Development (Project: AI4Fertility)</h3>
+                    <p>
+                        Using the data annotated with the MMS tool, I developed a machine learning pipeline to automatically classify the maturation stage of oocytes from video frames. My process involved:
+                    </p>
+                    <ul>
+                        <li><strong>Image Pre-processing:</strong> Using <strong>OpenCV</strong> in Python to segment oocytes, normalize images, and extract key regions of interest.</li>
+                        <li><strong>Model Architecture:</strong> Designing and implementing a <strong>Convolutional Neural Network (CNN)</strong> using TensorFlow/Keras, tailored for this specific image classification task.</li>
+                        <li><strong>Training & Validation:</strong> Training the model on the labeled dataset and validating its performance, creating a proof-of-concept for automated, objective oocyte analysis.</li>
+                    </ul>
+
+                    <h2>Results & Takeaways (Result)</h2>
+                    <p>
+                        This fellowship successfully demonstrated an end-to-end process for applying AI in a complex medical domain. The published paper contributes a needed formal review to the academic community. The MMS web application provides a valuable tool for future data collection, and the AI4Fertility project serves as a strong proof-of-concept that data-driven methods, particularly CNNs, can bring much-needed objectivity to IVF procedures.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Date:</strong> 2022</p>
+                    <p><strong>Type:</strong> Research Fellowship</p>
+                    <p><strong>Institution:</strong> University of Genoa</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Python</li>
+                        <li>OpenCV</li>
+                        <li>TensorFlow</li>
+                        <li>CNNs</li>
+                        <li>Flask</li>
+                        <li>HTML / CSS</li>
+                        <li>JavaScript</li>
+                        <li>Git</li>
+                    </ul>
+
+                    <div class="sidebar-links">
+                        <a href="https://doi.org/10.1016/j.artmed.2024.102997" target="_blank" class="details-button">View Publication</a>
+                        <a href="https://github.com/iannuz10/AI4Fertility" target="_blank" class="details-button">AI Project GitHub</a>
+                        <a href="https://github.com/TheEngineRoom-UniGe/MMS" target="_blank" class="details-button">Web App GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
