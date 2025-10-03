@@ -182,6 +182,61 @@ footer {
     font-size: 0.9em;
 }
 
+/* Education Section */
+.education-section {
+    background-color: #fff; /* A slightly different background to make it stand out */
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.education-item {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.education-item h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.education-item .university {
+    font-weight: 600;
+    color: #555;
+    margin: 5px 0;
+}
+
+.education-item .dates {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.diploma-link {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.diploma-link:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .about-container {
