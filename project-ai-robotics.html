@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Deep Learning for Object Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Artificial Intelligence for Robotics: CenterNet for Object Detection</h1>
+            <p class="project-tagline">An in-depth implementation of the CenterNet anchor-free object detector in PyTorch, focusing on the core principles of keypoint estimation for robotics perception.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/centernet-main-banner.png" alt="CenterNet architecture diagram" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> Traditional object detectors (like YOLO, SSD) rely on a complex system of pre-defined "anchors," which can be inefficient and require extensive tuning. Anchor-free methods like CenterNet offer a simpler and more elegant approach by treating objects as keypoints.</li>
+                    <li><strong>Task:</strong> To implement the complete CenterNet model from scratch in PyTorch. This involved building all core components: the data loading pipeline for the Pascal VOC dataset, the ResNet-18 backbone, the detection head, and the specialized multi-part loss function.</li>
+                    <li><strong>Action:</strong> I wrote the Python code for each critical part of the model. I implemented the data loader to parse annotations and generate ground truth heatmaps. I defined the <code>CenterNetHead</code> module to produce the three output branches (heatmap, size, offset). Crucially, I implemented the <code>CenterNetLoss</code> class, which combines a modified focal loss for keypoint detection with L1 losses for regressing the object's size and sub-pixel offset.</li>
+                    <li><strong>Result:</strong> The implemented model successfully loaded a pre-trained backbone and generated correct predictions on the test dataset. The visualization notebook confirmed that the model could accurately produce bounding boxes by identifying object centers and regressing their dimensions, validating the correctness of the from-scratch implementation.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        This project implements <strong>CenterNet</strong>, a keypoint-based, anchor-free object detector. Unlike anchor-based methods that classify and refine a dense grid of proposals, CenterNet frames detection as a simpler problem: find the center of each object and regress its properties.
+                    </p>
+                    <p>
+                        The architecture consists of two main parts:
+                    </p>
+                    <ol>
+                        <li><strong>Backbone Network:</strong> A standard <strong>ResNet-18</strong> model, pre-trained on ImageNet, acts as a feature extractor. It takes an input image and produces a down-sampled feature map.</li>
+                        <li><strong>Detection Head (<code>CenterNetHead</code>):</strong> This custom module takes the feature map from the backbone and produces three distinct outputs, each corresponding to a different aspect of the detection task:
+                            <ul>
+                                <li><strong>Heatmap:</strong> An 80-channel feature map where each channel represents a class. The values in this map are high at locations corresponding to the center of an object of that class.</li>
+                                <li><strong>Size Map:</strong> A 2-channel map that, for each location, regresses the width and height of the bounding box for the object centered there.</li>
+                                <li><strong>Offset Map:</strong> A 2-channel map that regresses the sub-pixel offset of the object's center. This corrects for the quantization error introduced by the down-sampling in the backbone.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h3>Core Implementation Details</h3>
+                    <p>
+                        My work involved implementing the core logic of this pipeline in <strong>Python</strong> and <strong>PyTorch</strong>.
+                    </p>
+                    <ul>
+                        <li><strong>Data Pipeline (<code>tools/dataset.py</code>):</strong> I implemented the <code>VOC</code> dataset class. A key task here was to generate the ground truth data for training. This involved taking the ground truth bounding boxes and creating the target heatmap by drawing a 2D Gaussian distribution at each object's center location.</li>
+                        <li><strong>Loss Function (<code>model/loss_function.py</code>):</strong> This was the most critical part of the implementation. I created the <code>CenterNetLoss</code> class, which calculates a weighted sum of three separate losses:
+                            <ol>
+                                <li><strong>Heatmap Loss:</strong> A modified version of Focal Loss, which is designed for dense object detection. It heavily down-weights the loss for easy negative examples (background locations), forcing the model to focus on correctly identifying the rare positive keypoints.</li>
+                                <li><strong>Size and Offset Loss:</strong> Standard L1 Loss is used to train the size and offset regression heads, but it is only applied at the locations of the ground truth object centers.</li>
+                            </ol>
+                        </li>
+                        <li><strong>Prediction Decoding (<code>model/model_utils.py</code>):</strong> I implemented the <code>decode_prediction</code> function. This function takes the raw output from the model's three heads, finds the peaks in the heatmap (potential object centers), and then uses the corresponding values from the size and offset maps at those peak locations to construct the final bounding boxes. Non-Maximum Suppression (NMS) is applied to the heatmaps to filter out duplicate detections.</li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        The primary challenge of this lab was shifting from the intuitive idea of "finding boxes" to the more abstract concept of "keypoint estimation." Understanding how a 2D Gaussian on a heatmap can effectively represent an object's location is the key conceptual hurdle.
+                    </p>
+                    <p>
+                        The solution lay in the careful implementation of the <strong><code>CenterNetLoss</code> function</strong>. By correctly applying the focal loss, the model learns to produce sharp peaks on the heatmap only at object centers, ignoring the vast majority of background pixels. By masking the L1 loss for size and offset to only apply at these center locations, the model learns to associate a specific size and a sub-pixel correction to each detected keypoint. This elegant combination of loss functions is what allows the seemingly simple keypoint approach to produce precise bounding boxes, successfully solving the core challenge of the anchor-free method.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Academic Course Project</p>
+                    <p><strong>Course:</strong> Artificial Intelligence for Robotics</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Python</li>
+                        <li>PyTorch</li>
+                        <li>Deep Learning</li>
+                        <li>Computer Vision</li>
+                        <li>CNNs</li>
+                        <li>ResNet</li>
+                        <li>Object Detection</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
