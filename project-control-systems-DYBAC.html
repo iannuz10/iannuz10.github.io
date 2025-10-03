@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Inverted Pendulum Control</title>
+    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a> <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>Dynamic Model Based Control: State-Space Control of an Inverted Pendulum</h1>
+            <p class="project-tagline">An academic project focused on designing, implementing, and simulating a complete controller and observer system in MATLAB & Simulink to solve the classic unstable inverted pendulum problem.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/pendulum-main-banner.png" alt="Simulink Model of the Inverted Pendulum Control System" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> The inverted pendulum on a cart is a classic problem in dynamics and control theory. It is an inherently unstable, non-linear system that requires active control to maintain its upright equilibrium position.</li>
+                    <li><strong>Task:</strong> To model the system, design a stabilizing state feedback controller, and implement an observer to estimate the full state of the system from limited sensor outputs (pendulum angle and cart position only).</li>
+                    <li><strong>Action:</strong> I first derived the linearized state-space model of the system. Then, using MATLAB, I designed a full state feedback controller by placing the closed-loop poles at desired locations for stability and performance. I also designed a Luenberger observer to estimate the unmeasurable states (the angular and linear velocities). The entire system was implemented and tested in Simulink on both the linearized and original non-linear models.</li>
+                    <li><strong>Result:</strong> The simulations were successful. The controller effectively stabilized the pendulum, driving its angle to zero from an initial offset. The observer accurately tracked the true states of the system, enabling the estimated state feedback to perform almost identically to a controller with full state information. The linear controller also proved robust enough to stabilize the non-linear model.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        The project followed a classic state-space control design methodology. [cite_start]The first step was to take the non-linear mechanical equations of the pendulum and cart and linearize them around the upright equilibrium point ($\theta=0$) to obtain a linear time-invariant (LTI) system of the form $\dot{x} = Ax + Bu$ and $y = Cx + Du$. [cite: 35]
+                    </p>
+                    <p>
+                        The control architecture consists of two main components:
+                    </p>
+                    <ol>
+                        <li><strong>State Feedback Controller:</strong> A controller of the form $u = -Fx$ (or $u = -F\hat{x}$ for estimated feedback) where the gain matrix $F$ is calculated to move the eigenvalues (poles) of the closed-loop system matrix $(A-BF)$ to stable locations in the left-half of the complex plane.</li>
+                        [cite_start]<li><strong>Luenberger Observer:</strong> Since only the angle ($\theta$) and cart position ($p$) were assumed to be measurable[cite: 51], an observer was designed to estimate the full state vector, including the velocities ($\dot{\theta}$ and $\dot{p}$). The observer dynamics are given by $\dot{\hat{x}} = A\hat{x} + Bu + K(y - C\hat{x})$, where K is the observer gain matrix.</li>
+                    </ol>
+                    <p>
+                        This separation principle allows the controller and observer to be designed independently. [cite_start]The final implementation uses the estimated state for feedback, with the control law $u = -F\hat{x}$. [cite: 65, 66]
+                    </p>
+
+                    <h3>Core Implementation Details</h3>
+                    <p>
+                        The entire design and simulation was carried out in <strong>MATLAB and Simulink</strong>.
+                    </p>
+                    <ul>
+                        <li><strong>Controller & Observer Gain Calculation:</strong> I used MATLAB's `place` command to perform the pole placement. For the controller gain `F`, the desired poles were specified as `[-1±i, -2±2i]` to achieve a stable response. For the observer gain `K`, two sets of poles were tested: "slow" poles identical to the controller's, and "fast" poles (`[-100±i, -200±2i]`) to ensure the estimation error converged much more quickly than the system dynamics.</li>
+                        <li><strong>Simulink Modeling:</strong> I built Simulink models (`lab1_DYBACCO.slx` and `lab1_DYBAC_NL.slx`) that included State-Space blocks for both the plant and the observer. The models were configured to switch between ideal full state feedback and the more realistic estimated state feedback for direct comparison.</li>
+                        <li><strong>Simulation and Visualization:</strong> A MATLAB script (`utils.m`) was used to automate the process of setting parameters, running the various simulation configurations, and generating plots to compare the true state ($x$), the estimated state ($\hat{x}$), the estimation error, and the control input ($u$) over time.</li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        The primary challenge of this problem is that in any realistic scenario, it's impossible or impractical to measure every state variable directly. Specifically, measuring the angular and linear velocities accurately can be difficult and noisy.
+                    </p>
+                    <p>
+                        The solution was the implementation of the <strong>Luenberger observer</strong>. By using only the reliable position and angle measurements, the observer successfully reconstructed the velocity states. The simulation results showed that when the observer poles were chosen to be "fast" (i.e., with large negative real parts), the estimated states converged to the true states very rapidly, allowing the estimated state feedback controller to perform nearly as well as an ideal controller with perfect information. This demonstrates the practical power of observers in bridging the gap between control theory and real-world hardware limitations.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Date:</strong> 2024 (based on PDF)</p>
+                    <p><strong>Type:</strong> Academic Course Project</p>
+                    <p><strong>Course:</strong> Dynamic Model Based Control</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>MATLAB</li>
+                        <li>Simulink</li>
+                        <li>Control Theory</li>
+                        <li>State-Space Models</li>
+                        <li>Pole Placement</li>
+                        <li>Luenberger Observer</li>
+                    </ul>
+
+                    <div class="sidebar-links">
+                        </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
