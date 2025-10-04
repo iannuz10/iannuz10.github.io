@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Details | SRL Control in VR</title>
-    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -12,7 +13,8 @@
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">Antonio Iannone</a> <ul class="nav-menu">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#education">Education</a></li>
                 <li><a href="index.html#projects">Projects</a></li>
@@ -31,42 +33,66 @@
         <section class="project-detail-content">
             <img src="images/thesis-main-banner.png" alt="Main thesis visual" class="project-banner-image">
 
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> Research into Supernumerary Robotic Limbs (SRLs) is hampered by the lack of standardized, cost-effective platforms for testing control schemes and measuring user embodiment.</li>
+                    <li><strong>Task:</strong> To design, develop, and validate a modular Virtual Reality testbed in Unreal Engine 5 to systematically compare different robotic assistance paradigms and their effect on user performance, workload, and subjective experience.</li>
+                    <li><strong>Action:</strong> I built a complete VR application from scratch, implementing realistic physics-based assembly mechanics and multiple SRL control modes. The core of the thesis was a user study (N=24) comparing unassisted performance against collaboration with an autonomous SRL and an autonomous external cobot, both driven by a Finite State Machine (FSM).</li>
+                    <li><strong>Result:</strong> The study proved that robotic assistance significantly improved performance and reduced workload. Crucially, it revealed a clear user preference for the wearable SRL, which was strongly correlated with a higher sense of embodiment (Ownership and Agency), demonstrating that the form factor of a robot is a key driver of user satisfaction.</li>
+                </ul>
+            </div>
+
             <div class="project-detail-grid">
                 <div class="project-detail-text">
-                    <h2>The Challenge (Situation & Task)</h2>
-                    <p>
-                        Supernumerary Robotic Limbs (SRLs) are a promising form of human augmentation, but their widespread adoption is hindered by challenges in designing intuitive control schemes and inducing a strong sense of embodiment in users. A significant bottleneck in the field is the lack of standardized, cost-effective, and adaptable platforms for systematic experimentation.
-                    </p>
-                    <p>
-                        The primary goal of this thesis was to address this gap by developing and validating a modular, high-fidelity Virtual Reality environment to serve as a standardized testbed for SRL research. The objective was to create a platform capable of systematically comparing different robotic assistance paradigms and their effects on user performance, workload, and subjective experience.
-                    </p>
+                    <h2>Technical Deep Dive</h2>
                     
-                    <h2>My Solution (Action)</h2>
+                    <h3>Platform & Architecture (Unreal Engine 5)</h3>
                     <p>
-                        To tackle this challenge, I designed and built a complete VR application from the ground up using <strong>Unreal Engine 5</strong>. The development process involved several key actions:
+                        The entire simulation was built from the ground up in <strong>Unreal Engine 5</strong>. UE5 was chosen for its advanced features critical to this research:
                     </p>
                     <ul>
-                        <li><strong>VR Environment Creation:</strong> I developed a realistic and interactive virtual environment centered around a complex multi-step assembly task (building a stool). This included implementing a robust physics-based interaction system for object manipulation, part attachment, and functional tool usage (hammer, screwdriver, etc.).</li>
-                        <li><strong>System & Control Implementation:</strong> I implemented multiple SRL control strategies, with a primary focus on an autonomous assistant driven by a Finite State Machine (FSM) that could proactively help the user by handling parts and tools.</li>
-                        <li><strong>User Study Design & Execution:</strong> I conducted a formal within-subjects user study with 24 participants. The experiment compared performance and user experience across three distinct conditions: (1) working unassisted, (2) collaborating with the autonomous wearable SRL, and (3) collaborating with an autonomous external cobot.</li>
-                        <li><strong>Data Analysis:</strong> I collected and processed a rich dataset, including objective performance metrics (completion time, 3D hand path data, error counts) and subjective feedback from validated questionnaires (NASA-TLX, UEQ-S, VEQ). Custom Python scripts were written for detailed statistical analysis.</li>
+                        <li><strong>High-Fidelity Physics Engine:</strong> Essential for simulating realistic object interactions, collisions, and dynamic behavior required for the complex assembly task.</li>
+                        <li><strong>Blueprints Visual Scripting:</strong> Allowed for rapid prototyping and iteration of complex interaction logic and control strategies without lengthy C++ compilation cycles.</li>
+                        <li><strong>Native OpenXR Support:</strong> Ensured broad compatibility with VR hardware like the Meta Quest 3 and followed industry standards for XR development.</li>
+                    </ul>
+                    <p>
+                        The core architecture was modular, centered on a <strong>VR Pawn</strong> that served as the user's avatar. The Supernumerary Robotic Limbs were implemented as attachable components, with their movement driven by Inverse Kinematics (IK) for natural motion.
+                    </p>
+
+                    <h3>Core Implementation: Interaction & Assembly Mechanics</h3>
+                    <p>
+                        A significant portion of the work was dedicated to creating a robust and believable interaction system for the virtual assembly task (building a stool).
+                    </p>
+                    <ul>
+                        <li><strong>Physics-Based Assembly:</strong> The attachment mechanic relied on a system of box collisions and pre-placed helper meshes. When a user brought a component close to its target location, it would "snap" into place. A key challenge was solving physics inheritance issues to ensure that once parts were connected, they moved as a single rigid body.</li>
+                        <li><strong>Natural Grasping:</strong> To prevent visual disconnects during the snapping process, the virtual hand's position was smoothly interpolated (lerped) to maintain a continuous grasp on the object, enhancing the sense of presence.</li>
+                        <li><strong>Functional Virtual Tools:</strong> Tools like a hammer, screwdriver, and Allen key were implemented with custom logic. The hammer's function was based on impact velocity, while the screwdriver and Allen key used physics constraints to lock onto a screw and only allow for the correct rotational motion.</li>
                     </ul>
 
-                    <h2>Results & Takeaways (Result)</h2>
+                    <h3>Core Implementation: Control & Autonomy</h3>
                     <p>
-                        The study yielded several significant findings that contribute to the field of human-robot interaction:
+                        To demonstrate the platform's flexibility, several control modes were implemented, with the main study focusing on a task-aware autonomous system.
                     </p>
-                     <ul>
-                        <li><strong>Performance Boost:</strong> Both the SRL and Cobot assistants led to significantly faster task completion times, reduced physical effort (shorter hand paths, smaller workspace), and lower perceived workload compared to working alone.</li>
-                        <li><strong>The Superiority of Wearable Systems:</strong> While functionally equivalent, users showed a clear subjective preference for the wearable SRL. It was perceived as significantly more "inventive," "lifelike," and "intelligent" than the external cobot, resulting in a more engaging user experience.</li>
-                        <li><strong>Embodiment of an Autonomous Agent:</strong> A key discovery was that users reported a strong sense of <strong>Ownership</strong> and, counterintuitively, <strong>Agency</strong> over the SRLs, despite having no direct manual control. This suggests that predictable, task-relevant autonomous behavior can generate a powerful feeling of control.</li>
-                        <li><strong>Embodiment as a Driver of Preference:</strong> Further analysis revealed that this sense of embodiment was a key predictor of user preference. Participants who felt a stronger connection to the SRL were significantly more likely to prefer it, highlighting that subjective feeling is as important as objective performance.</li>
+                    <ul>
+                        <li><strong>FSM-Based Autonomy:</strong> The autonomous behavior of both the SRL and the external cobot was governed by a <strong>Finite State Machine (FSM)</strong> created using the Logic Driver Lite plugin. This FSM executed pre-defined, multi-step action sequences, such as the "Reach-Grab-Bring Sequence," which commanded the robot to retrieve a required part or tool and bring it to a convenient hand-off location for the user, anticipating their needs.</li>
+                        <li><strong>Other Implemented Modes:</strong> To showcase the testbed's modularity, other manual control modes were also developed, including direct control via polar coordinates, a one-to-one "Mirroring" mode, and an advanced "Retargeting" mode based on the virtual fixture concept.</li>
                     </ul>
+
+                    <h3>Experiment Design & Data Analysis</h3>
+                    <p>
+                        A formal user study was the centerpiece of the thesis. A rich set of both objective and subjective data was collected and analyzed using custom <strong>Python</strong> scripts with the pandas and SciPy libraries.
+                    </p>
+                    <ul>
+                        <li><strong>Objective Metrics:</strong> The system logged detailed kinematic data, including 3D coordinates of the user's hands. From this, I calculated advanced metrics like total path length, average movement speed, and average jerk (a measure of movement smoothness). Workspace volume was also computed using a <strong>Convex Hull algorithm</strong> to quantify the user's interaction space.</li>
+                        <li><strong>Subjective Metrics:</strong> Validated questionnaires such as the NASA-TLX (workload), UEQ-S (user experience), and the Virtual Embodiment Questionnaire (VEQ) were used to capture the user's subjective experience.</li>
+                    </ul>
+
                 </div>
                 
                 <div class="project-detail-sidebar">
                     <h3>Project Information</h3>
-                    <p><strong>Date:</strong> 2025</p>
+                    <p><strong>Date:</strong> July 2025</p>
                     <p><strong>Type:</strong> Master's Thesis</p>
                     <p><strong>Institution:</strong> Keio University & École Centrale de Nantes</p>
                     
@@ -78,12 +104,13 @@
                         <li>Pandas / SciPy</li>
                         <li>VR (Meta Quest 3)</li>
                         <li>Blender</li>
+                        <li>Control Theory (FSM)</li>
+                        <li>Data Analysis</li>
                     </ul>
 
                     <div class="sidebar-links">
-                        <a href="https://github.com/iannuz10/SRLSystem" target="_blank" class="details-button">View GitHub Repo</a>
-                        <a href="https://drive.google.com/file/d/12CxmLEK9ngy062AEhKMU1PMW0PtLs161/view?usp=drive_link" target="_blank" class="details-button">Read Full Work (PDF)</a>
-                        <a href="https://docs.google.com/presentation/d/1bSWG4zajY5XtevkfMTsxBGTq90CQkhjkqd1dO34SpyU/edit?usp=sharing" target="_blank" class="details-button">See Final Defense Presentation (PPTX)</a>
+                        <a href="YOUR-GITHUB-REPO-LINK-HERE" target="_blank" class="details-button">View GitHub Repo</a>
+                        <a href="YOUR-GOOGLE-DRIVE-LINK-FOR-THESIS-PDF" target="_blank" class="details-button">Read Full Paper (PDF)</a>
                     </div>
                 </div>
             </div>
