@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | JEMARO Days Robotics Competition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-header">
+            <h1>JEMARO Days Robotics Competition</h1>
+            <p class="project-tagline">A competitive workshop focused on developing a complete software stack for a mobile robot to solve a series of autonomous navigation and perception challenges.</p>
+        </section>
+        
+        <section class="project-detail-content">
+            <img src="images/jemaro-main-banner.png" alt="JEMARO Competition Banner" class="project-banner-image">
+
+            <div class="star-summary-box">
+                <h2>At a Glance: The STAR Summary</h2>
+                <ul>
+                    <li><strong>Situation:</strong> The JEMARO Days 2023 event included a time-limited competition where teams had to program a mobile robot to autonomously solve three distinct challenges: a timed lap race, marker-based navigation, and a search-and-find task for tennis balls.</li>
+                    <li><strong>Task:</strong> As a member of a four-person team, my task was to co-develop a robust and modular software stack using Python and ROS2 that could be quickly adapted to solve all three challenges. My specific responsibilities were centered on the computer vision pipeline and its integration.</li>
+                    <li><strong>Action:</strong> I was heavily involved in developing the perception node (`detecting.py`), which used OpenCV for color segmentation, contour analysis, and shape recognition to identify track lines, markers, and tennis balls. I worked on integrating this perception data into a central state machine (`main_loop.py`) that managed the robot's overall behavior, and which communicated with navigation goals via a ROS2 action client (`moving.py`).</li>
+                    <li><strong>Result:</strong> Our team successfully built an integrated system that was able to perceive its environment and make autonomous decisions. The architecture allowed the robot to navigate complex arenas, identify and react to competition elements, and complete the specified tasks under the pressure of the competition environment.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>System Architecture & Design</h3>
+                    <p>
+                        Our team's solution was built on a modular, state-driven architecture in <strong>Python and ROS2</strong>. The system was orchestrated by a central state machine, which allowed us to easily switch behaviors based on the active challenge and sensor input.
+                    </p>
+                    <p>
+                        The core components of the architecture were:
+                    </p>
+                    <ol>
+                        <li><strong>Main Loop (<code>main_loop.py</code>):</strong> This node acted as the "brain" of the robot. It implemented a state machine that subscribed to topics from the vision node. Based on the detected objects and the current task, it would decide the next action, such as "follow the line" or "move towards the detected ball."</li>
+                        <li><strong>Perception Node (<code>detecting.py</code>):</strong> This node was responsible for all visual processing. It received raw camera images and published structured information about detected objects.</li>
+                        <li><strong>Motion Service Client (<code>moving.py</code>):</strong> This node provided a clean interface for the main loop to command the robot's motion. It used a ROS2 <strong>Action Client</strong> to send goals (e.g., target coordinates) to a pre-existing navigation or motion server on the robot.</li>
+                    </ol>
+
+                    <h3>Core Implementation Details: Computer Vision</h3>
+                    <p>
+                        My primary technical contribution was within the perception node, which used a classic <strong>OpenCV</strong> pipeline to handle the different detection tasks:
+                    </p>
+                    <ul>
+                        <li><strong>Color Segmentation:</strong> To isolate objects of interest (e.g., the yellow tennis balls or colored markers), I implemented color segmentation in the HSV (Hue, Saturation, Value) color space. Using `cv2.inRange`, we could create binary masks for specific colors, effectively filtering out the rest of the image.</li>
+                        <li><strong>Contour Analysis:</strong> After segmentation, I used `cv2.findContours` to identify distinct blobs in the binary mask. For each contour, I calculated properties like its area (to filter out noise) and its centroid (to determine the object's location in the image frame).</li>
+                        <li><strong>Shape Recognition:</strong> For challenges involving markers, we needed to differentiate shapes. I used the `cv2.approxPolyDP` function to approximate the contour's shape. By counting the number of vertices in the approximation, we could robustly distinguish between triangles, squares, etc., allowing the robot to follow the "rules" of the challenge.</li>
+                    </ul>
+
+                    <h3>Challenges & Solutions</h3>
+                    <p>
+                        A key challenge was making the perception pipeline robust to varying lighting conditions and camera angles, which are common in a live competition environment. A fixed set of HSV thresholds might work in one corner of the room but fail in another.
+                    </p>
+                    <p>
+                        Our solution was to develop a flexible and well-structured parameter system. Instead of hard-coding values, all HSV thresholds, minimum contour sizes, and other parameters were exposed in a configuration file. This allowed us to quickly **re-calibrate the vision system** for the specific competition arena just before our run, a crucial factor in adapting to the real-world environment and ensuring our detection logic remained reliable.
+                    </p>
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Type:</strong> Workshop & Robotics Competition</p>
+                    <p><strong>Event:</strong> JEMARO Days 2023</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Python</li>
+                        <li>ROS2</li>
+                        <li>OpenCV</li>
+                        <li>Computer Vision</li>
+                        <li>State Machines</li>
+                        <li>ROS2 Actions</li>
+                        <li>Git</li>
+                    </ul>
+
+                    <div class="sidebar-links">
+                        <a href="https://github.com/DimitriosGkegkas/JEMARO_competition/tree/main" target="_blank" class="details-button">View Project on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
