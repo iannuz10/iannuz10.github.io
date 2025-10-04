@@ -442,6 +442,28 @@ code {
     color: #fff;
 }
 
+/* Pinned Project Styling */
+.project-card.pinned {
+    position: relative; /* Needed for absolute positioning of the pin */
+    overflow: hidden; /* Ensure pin doesn't overflow rounded corners */
+}
+
+.project-card.pinned::before {
+    content: "\f08d"; /* Font Awesome pin icon code */
+    font-family: "Font Awesome 6 Free"; /* Specify Font Awesome font */
+    font-weight: 900; /* Use solid icon style */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff; /* White pin */
+    background-color: #e67e22; /* A striking color for the pin's background */
+    padding: 5px 8px;
+    border-radius: 50%; /* Make it circular */
+    font-size: 1.2em;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10; /* Ensure it's above image */
+}
+
 
 /* --- Responsive Design --- */
 @media (max-width: 900px) {
