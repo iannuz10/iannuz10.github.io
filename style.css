@@ -497,6 +497,27 @@ code {
 }
 /* --- END FINAL LOGO STYLES --- */
 
+/* Styling for Responsive YouTube Video Embed */
+.video-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio (divides 9 by 16) */
+    margin-bottom: 40px; /* Adds space below the video */
+    border-radius: 8px; /* Optional: adds rounded corners like your images */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow */
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
 /* Responsive adjustments for logos on smaller screens */
 @media (max-width: 480px) {
     .education-header {
