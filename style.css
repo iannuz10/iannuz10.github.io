@@ -464,112 +464,38 @@ code {
     z-index: 10; /* Ensure it's above image */
 }
 
-/* Education Section */
-.education-section {
-    background-color: #fff;
-}
-
-.education-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    margin-top: 30px;
-}
-
-.education-item {
-    width: 100%;
-    max-width: 700px;
-    background: #fdfdfd;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 25px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    text-align: center;
-}
-
-.education-item h3 {
-    margin-top: 0;
-    font-size: 1.3em;
-    color: #333;
-}
-
-.education-item .university {
-    font-weight: 600;
-    color: #555;
-    margin: 5px 0 15px 0; /* Added bottom margin */
-}
-
-.education-item .dates {
-    font-size: 0.9em;
-    color: #777;
-    margin-top: 15px; /* Add space above dates */
-    margin-bottom: 20px;
-}
-
-/* --- FINAL CORRECTED LOGO STYLES --- */
+/* --- FINAL CORRECTED LOGO STYLES V2 --- */
 .program-logo-small {
-    max-height: 45px; /* Correctly sizes the JEMARO logo */
+    max-height: 40px;  /* Reduced JEMARO logo size */
     width: auto;
     margin: 10px 0;
 }
 
 .uni-logo {
-    max-height: 50px;  /* Sets a consistent max height for all uni logos */
-    max-width: 200px;  /* Prevents very wide logos from being too large */
-    width: auto;       /* Maintains aspect ratio */
-    object-fit: contain; /* Ensures logo scales nicely within the bounds */
+    display: block; /* Helps with margin and centering */
+    margin: 15px auto 5px auto; /* Centers the logo horizontally */
+    object-fit: contain; /* Ensures no distortion */
+    width: auto; /* Maintains aspect ratio */
+}
+
+/* Base height for normally proportioned logos */
+#ecn-logo {
+    max-height: 50px;
+}
+
+/* Target Keio logo specifically to reduce its size */
+#keio-logo {
+    max-height: 55px;
+    max-width: 130px; /* Constrain its width to prevent it feeling too big */
+}
+
+/* Target Unige logo specifically to make it appear larger */
+/* This works by allowing it more height, compensating for the whitespace */
+#unige-logo {
+    max-height: 60px;
+    max-width: 240px;
 }
 /* --- END FINAL LOGO STYLES --- */
-
-.degree-split {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin: 20px 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 20px 0 10px 0;
-    gap: 20px;
-}
-
-.degree-item {
-    text-align: center;
-    flex: 1;
-    min-width: 220px;
-}
-
-.degree-item h4 {
-    margin-bottom: 5px;
-}
-
-.degree-item p {
-    margin: 0;
-}
-
-.diploma-links-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.diploma-link {
-    display: inline-block;
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.diploma-link:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-    color: #fff;
-}
 
 /* Responsive adjustments for logos on smaller screens */
 @media (max-width: 480px) {
