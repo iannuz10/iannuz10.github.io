@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Details | AI for IVF Research</title>
-    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -12,7 +13,8 @@
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">Antonio Iannone</a> <ul class="nav-menu">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#education">Education</a></li>
                 <li><a href="index.html#projects">Projects</a></li>
@@ -31,44 +33,47 @@
         <section class="project-detail-content">
             <img src="images/research-main-banner.png" alt="IVF Research Project Banner" class="project-banner-image">
 
+            <div class="star-summary-box">
+                <h2>At a Glance</h2>
+                <ul>
+                    <li><strong>Situation:</strong> The success of In Vitro Fertilisation (IVF) is limited by the subjective, manual assessment of oocyte (egg cell) quality, which leads to inconsistent outcomes and a lack of standardization.</li>
+                    <li><strong>Task:</strong> To investigate how Artificial Intelligence could be applied to this domain. This involved conducting a formal literature review, developing a tool for data collection, and implementing a proof-of-concept AI model for automated analysis.</li>
+                    <li><strong>Action:</strong> I led three initiatives: 1) A systematic literature review following PRISMA guidelines, resulting in a first-author publication. 2) The development of "MMS," a full-stack Python/Flask web app for expert video annotation. 3) The creation of "AI4Fertility," a computer vision pipeline using OpenCV and a TensorFlow/Keras CNN to classify oocyte maturation stages.</li>
+                    <li><strong>Result:</strong> The project successfully established a complete research lifecycle. The published paper provides a foundational survey for the field, the MMS tool enables crucial data collection, and the AI model serves as a strong proof-of-concept for automating oocyte assessment, demonstrating the potential for AI to bring objectivity to IVF procedures.</li>
+                </ul>
+            </div>
+
             <div class="project-detail-grid">
                 <div class="project-detail-text">
-                    <h2>The Challenge (Situation & Task)</h2>
-                    <p>
-                        The success of In Vitro Fertilisation (IVF) heavily depends on the quality of the oocyte (egg cell), but its assessment is a highly subjective process led by embryologists. This lack of objectivity can lead to inconsistent outcomes. The goal of my research fellowship was to investigate how Artificial Intelligence could bring standardization and data-driven insights to this critical step of the IVF workflow.
-                    </p>
-                    
-                    <h2>My Contributions (Action)</h2>
-                    <p>
-                        During the fellowship, I undertook a multi-faceted approach, leading three core initiatives from conception to completion:
-                    </p>
-                    
+                    <h2>Technical Deep Dive</h2>
+
                     <h3>1. Systematic Literature Review & Publication</h3>
                     <p>
-                        I conducted a rigorous, systematic review of all existing literature on the application of AI to oocyte quality assessment. This involved defining research questions, formulating database queries, and applying a multi-stage screening and quality assessment process following PRISMA guidelines. The synthesis of this research formed the basis of a scientific paper.
-                        <br><strong>Outcome:</strong> I was the first author of the peer-reviewed paper <strong>"On the role of artificial intelligence in analysing oocytes during in vitro fertilisation procedures,"</strong> published in the Elsevier journal <em>Artificial Intelligence in Medicine</em>.
-                    </p>
-
-                    <h3>2. Data Labeling Web Application (Project: MMS)</h3>
-                    <p>
-                        A major challenge identified in the research is the lack of high-quality, annotated datasets for training AI models. To address this, I developed <strong>MMS (Mouse Maturation Stage)</strong>, a full-stack web application that provides a user-friendly interface for embryologists to upload and label videos of oocyte maturation.
-                        <br>Built with a <strong>Python/Flask</strong> backend and a standard <strong>HTML/CSS/JS</strong> frontend, this tool was crucial for creating the structured, labeled dataset required for the next phase of the project.
-                    </p>
-
-                    <h3>3. AI Model Development (Project: AI4Fertility)</h3>
-                    <p>
-                        Using the data annotated with the MMS tool, I developed a machine learning pipeline to automatically classify the maturation stage of oocytes from video frames. My process involved:
+                        The project began with a rigorous academic investigation into the current state of AI in reproductive medicine. The goal was to identify the key challenges, common techniques, and significant gaps in the existing research.
                     </p>
                     <ul>
-                        <li><strong>Image Pre-processing:</strong> Using <strong>OpenCV</strong> in Python to segment oocytes, normalize images, and extract key regions of interest.</li>
-                        <li><strong>Model Architecture:</strong> Designing and implementing a <strong>Convolutional Neural Network (CNN)</strong> using TensorFlow/Keras, tailored for this specific image classification task.</li>
-                        <li><strong>Training & Validation:</strong> Training the model on the labeled dataset and validating its performance, creating a proof-of-concept for automated, objective oocyte analysis.</li>
+                        <li><strong>Methodology:</strong> I employed a formal systematic review process guided by the <strong>PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) statement</strong>. This involved formulating precise research questions, defining a search strategy with formal queries for Scopus and PubMed databases, and conducting a multi-stage screening process to filter hundreds of articles down to a core set of the most relevant papers.</li>
+                        <li><strong>Key Findings:</strong> The review highlighted several critical challenges in the field, including the lack of large, high-quality public datasets, non-standardized imaging protocols across clinics, and the need for more explainable AI models. We categorized AI applications into four main areas: Segmentation, Feature Extraction, Classification, and Decision Support.</li>
+                        <li><strong>Outcome:</strong> This comprehensive analysis led to my first-author publication, **"On the role of artificial intelligence in analysing oocytes during in vitro fertilisation procedures,"** in the Elsevier journal <em>Artificial Intelligence in Medicine</em>.</li>
                     </ul>
 
-                    <h2>Results & Takeaways (Result)</h2>
+                    <h3>2. Web Application for Data Annotation (Project: MMS)</h3>
                     <p>
-                        This fellowship successfully demonstrated an end-to-end process for applying AI in a complex medical domain. The published paper contributes a needed formal review to the academic community. The MMS web application provides a valuable tool for future data collection, and the AI4Fertility project serves as a strong proof-of-concept that data-driven methods, particularly CNNs, can bring much-needed objectivity to IVF procedures.
+                        To address the "lack of data" problem identified in the review, I developed a bespoke tool for expert annotation.
                     </p>
+                    <ul>
+                        <li><strong>Architecture:</strong> I built <strong>MMS (Mouse Maturation Stage)</strong>, a full-stack web application. The backend was developed in Python using the <strong>Flask</strong> web framework, which handled file uploads, data storage, and serving video frames. The frontend was built with standard <strong>HTML, CSS, and JavaScript</strong> to provide a simple and intuitive interface for medical experts.</li>
+                        <li><strong>Functionality:</strong> The application allows an embryologist to upload a video of an oocyte. The backend processes the video and presents it frame-by-frame. The expert can then navigate through the video and assign a specific maturation stage label (e.g., 'GV', 'MI', 'MII') to each frame. This process generates a structured JSON file containing the image-to-label mappings, creating a machine-learning-ready dataset from raw video.</li>
+                    </ul>
+
+                    <h3>3. Computer Vision Pipeline (Project: AI4Fertility)</h3>
+                    <p>
+                        The final stage was to use the annotated data to build a proof-of-concept classification model.
+                    </p>
+                    <ul>
+                        <li><strong>Image Pre-processing:</strong> The first step in the pipeline was to isolate the oocyte. I used <strong>OpenCV</strong> in Python to perform segmentation. This involved applying a Hough Circle Transform to automatically detect the circular shape of the oocyte in each frame, crop the image to that region of interest, and normalize its size and intensity. This automated pre-processing is crucial for creating consistent inputs for the neural network.</li>
+                        <li><strong>Model Architecture & Training:</strong> I designed and implemented a <strong>Convolutional Neural Network (CNN)</strong> using the <strong>TensorFlow/Keras</strong> framework. The architecture was tailored for this specific image classification task. The model was trained on the dataset generated by the MMS tool to learn the visual features that differentiate the various maturation stages.</li>
+                    </ul>
                 </div>
                 
                 <div class="project-detail-sidebar">
@@ -81,12 +86,13 @@
                     <ul class="tech-list">
                         <li>Python</li>
                         <li>OpenCV</li>
-                        <li>TensorFlow</li>
+                        <li>TensorFlow / Keras</li>
                         <li>CNNs</li>
                         <li>Flask</li>
                         <li>HTML / CSS</li>
                         <li>JavaScript</li>
                         <li>Git</li>
+                        <li>Academic Research</li>
                     </ul>
 
                     <div class="sidebar-links">
