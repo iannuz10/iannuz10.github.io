@@ -464,38 +464,120 @@ code {
     z-index: 10; /* Ensure it's above image */
 }
 
-/* New styles for Education Logos */
-.education-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-    text-align: left;
+/* Education Section */
+.education-section {
+    background-color: #fff;
 }
 
-.program-logo {
-    height: 80px;
+.education-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.education-item {
+    width: 100%;
+    max-width: 700px;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.education-item h3 {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #333;
+}
+
+.education-item .university {
+    font-weight: 600;
+    color: #555;
+    margin: 5px 0;
+}
+
+.education-item .dates {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 10px; /* Add space above dates */
+    margin-bottom: 20px;
+}
+
+/* --- NEW LOGO STYLES --- */
+.program-logo-small {
+    max-height: 50px; /* Controls JEMARO logo size */
     width: auto;
+    margin: 10px 0;
+}
+
+.uni-logo-container {
+    height: 60px; /* Fixed height container for all uni logos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0 5px 0; /* Vertical spacing */
 }
 
 .uni-logo {
-    height: 60px; /* Standard height for uni logos */
+    max-height: 100%; /* Logo will fill the container height */
+    max-width: 220px; /* Control max width to prevent wide logos from dominating */
     width: auto;
-    max-width: 150px; /* Prevent logos from becoming too wide */
-    margin-bottom: 10px;
+    object-fit: contain; /* This is the key: scales logo nicely without distortion */
+}
+/* --- END NEW LOGO STYLES --- */
+
+
+.degree-split {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 20px 0 10px 0;
+    gap: 20px;
 }
 
-.uni-logo.wide-logo {
-    height: 50px; /* Adjust height for wide logos */
-    max-width: 250px;
-    margin-bottom: 15px;
-}
-
-/* Adjustments for the Bachelor's degree card to center the single logo */
-.education-item:not(:first-child) .education-header {
+.degree-item {
     text-align: center;
-    flex-direction: column;
+    flex: 1;
+    min-width: 220px; /* Prevents items from getting too squished */
+}
+
+.degree-item h4 {
+    margin-bottom: 5px;
+}
+
+.degree-item p {
+    margin: 0;
+}
+
+.diploma-links-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.diploma-link {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.diploma-link:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    color: #fff;
 }
 
 /* Responsive adjustments for logos on smaller screens */
