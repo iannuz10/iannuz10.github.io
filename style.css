@@ -497,39 +497,30 @@ code {
 .education-item .university {
     font-weight: 600;
     color: #555;
-    margin: 5px 0;
+    margin: 5px 0 15px 0; /* Added bottom margin */
 }
 
 .education-item .dates {
     font-size: 0.9em;
     color: #777;
-    margin-top: 10px; /* Add space above dates */
+    margin-top: 15px; /* Add space above dates */
     margin-bottom: 20px;
 }
 
-/* --- NEW LOGO STYLES --- */
+/* --- FINAL CORRECTED LOGO STYLES --- */
 .program-logo-small {
-    max-height: 50px; /* Controls JEMARO logo size */
+    max-height: 45px; /* Correctly sizes the JEMARO logo */
     width: auto;
     margin: 10px 0;
 }
 
-.uni-logo-container {
-    height: 60px; /* Fixed height container for all uni logos */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px 0 5px 0; /* Vertical spacing */
-}
-
 .uni-logo {
-    max-height: 100%; /* Logo will fill the container height */
-    max-width: 220px; /* Control max width to prevent wide logos from dominating */
-    width: auto;
-    object-fit: contain; /* This is the key: scales logo nicely without distortion */
+    max-height: 50px;  /* Sets a consistent max height for all uni logos */
+    max-width: 200px;  /* Prevents very wide logos from being too large */
+    width: auto;       /* Maintains aspect ratio */
+    object-fit: contain; /* Ensures logo scales nicely within the bounds */
 }
-/* --- END NEW LOGO STYLES --- */
-
+/* --- END FINAL LOGO STYLES --- */
 
 .degree-split {
     display: flex;
@@ -545,7 +536,7 @@ code {
 .degree-item {
     text-align: center;
     flex: 1;
-    min-width: 220px; /* Prevents items from getting too squished */
+    min-width: 220px;
 }
 
 .degree-item h4 {
