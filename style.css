@@ -520,7 +520,7 @@ code {
 
 /* Styling for the Cropped & Resized Project GIF */
 .gif-banner {
-    max-width: 600px; /* Controls the smaller size of the GIF. You can adjust this value. */
+    max-width: 300px; /* Controls the smaller size of the GIF. You can adjust this value. */
     margin: 0 auto 40px auto; /* Centers the container and adds space below */
     aspect-ratio: 1 / 1; /* This forces the container to be a perfect square */
     
