@@ -518,6 +518,20 @@ code {
     height: 100%;
 }
 
+/* Styling for the Cropped & Resized Project GIF */
+.gif-banner {
+    max-width: 600px; /* Controls the smaller size of the GIF. You can adjust this value. */
+    margin: 0 auto 40px auto; /* Centers the container and adds space below */
+    aspect-ratio: 1 / 1; /* This forces the container to be a perfect square */
+    
+    background-image: url('images/ros2-demo.gif'); /* Sets your GIF as the background */
+    background-size: cover; /* Zooms the GIF to fill the square, cropping the sides */
+    background-position: center center; /* Ensures the cropping is centered */
+    
+    border-radius: 8px; /* Optional: adds rounded corners */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow */
+}
+
 /* Responsive adjustments for logos on smaller screens */
 @media (max-width: 480px) {
     .education-header {
