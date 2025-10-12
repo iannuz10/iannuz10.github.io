@@ -84,7 +84,7 @@
 
                     <h3>Challenges & Solutions</h3>
                     <p>
-                        The biggest challenge in any Kalman Filter implementation is **tuning the filter**. If the filter is told to trust the odometry too much (low process noise), it will ignore valid sensor measurements and drift. If it trusts the sensors too much (low measurement noise), it can become overly sensitive to sensor errors and produce a jittery, inaccurate estimate.
+                        The biggest challenge in any Kalman Filter implementation is <strong>tuning the filter</strong>. If the filter is told to trust the odometry too much (low process noise), it will ignore valid sensor measurements and drift. If it trusts the sensors too much (low measurement noise), it can become overly sensitive to sensor errors and produce a jittery, inaccurate estimate.
                     </p>
                     <p>
                         My solution was a methodical, data-driven tuning process. I started by estimating the measurement noise from the sensor's physical characteristics, as guided by the lab instructions. Then, I iteratively tested different values for the process noise parameters on various datasets. By analyzing the resulting plots (especially the innovation, or error between predicted and actual measurements), I could find a balance where the filter produced a smooth, drift-corrected path that was consistent with both the robot's motion and the ground-truth magnet locations. This hands-on tuning process was key to achieving a robust and accurate localization system.
