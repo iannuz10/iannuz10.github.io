@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Details | EKF for Robot Localization</title>
+    <title>Project Details | EKF for Differential Robot Localization</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +36,8 @@
 
     <main>
         <section class="project-detail-header">
-            <h1>Mobile Robotics: Extended Kalman Filter for 2D Localization</h1>
-            <p class="project-tagline">A hands-on project to implement and tune an Extended Kalman Filter (EKF) in MATLAB, fusing odometry and sensor data to accurately track a robot's position and orientation.</p>
+            <h1>Hybrid Localization: Extended Kalman Filter for Differential Robots</h1>
+            <p class="project-tagline">Implementing an EKF in MATLAB to fuse odometry with Reed sensor magnet detection, correcting for systematic errors and sensor noise in complex trajectories.</p>
         </section>
         
         <section class="project-detail-content">
@@ -46,10 +46,10 @@
             <div class="star-summary-box">
                 <h2>At a Glance</h2>
                 <ul>
-                    <li><strong>Situation:</strong> Autonomous mobile robots suffer from cumulative errors in their odometry (wheel encoder data), leading to significant drift over time. To achieve accurate localization, they must fuse this internal data with external sensor measurements.</li>
-                    <li><strong>Task:</strong> To implement a complete Extended Kalman Filter (EKF) in MATLAB to solve this problem. This involved writing the non-linear evolution model, implementing the EKF's prediction and update steps, and tuning the filter's noise parameters for optimal performance.</li>
-                    <li><strong>Action:</strong> I implemented the robot's motion model based on its differential drive kinematics. I then completed the core EKF algorithm, coding the prediction step using the motion model and the update step using measurements from magnetic field sensors. A critical part of the work was the systematic tuning of the process noise ($Q_\alpha$) and measurement noise ($Q_\gamma$) covariance matrices to achieve a stable and accurate state estimate.</li>
-                    <li><strong>Result:</strong> The implemented EKF was successful. It significantly corrected the drift from pure odometry, providing a much more accurate and robust estimate of the robot's trajectory across various test datasets (e.g., `circles.txt`, `twoloops.txt`). The final tuned filter effectively balanced the confidence between the robot's motion model and the external sensor readings.</li>
+                    <li><strong>Situation:</strong> Differential robots accumulate odometry errors from wheel slippage, squishy wheels, and chassis rigidity issues. To maintain an accurate pose, the robot must detect external magnetic markers (magnets) to reset its uncertainty.</li>
+                    <li><strong>Task:</strong> Characterize the mobile robot's noise profiles, determine initial position uncertainty, and implement the Jacobian matrices for a functional Extended Kalman Filter (EKF).</li>
+                    <li><strong>Action:</strong> I derived the $A$, $B$, and $C$ matrices for the EKF linearization. I calculated measurement variances ($\sigma_x, \sigma_y$) by analyzing magnet detection patterns (e.g., 20mm worst-case range) and tuned the $\sigma$ parameter to separate valid readings from noise using Mahalanobis distance thresholds.</li>
+                    <li><strong>Result:</strong> The EKF successfully corrected trajectory drift in circular, diagonal, and loop tests. Using a tuned $\sigma = 0.1$ and a 95% confidence Mahalanobis threshold, the filter effectively dumped initial orientation errors and corrected for 3-second "blind spots" where only odometry was available.</li>
                 </ul>
             </div>
 
@@ -57,52 +57,51 @@
                 <div class="project-detail-text">
                     <h2>Technical Deep Dive</h2>
                     
-                    <h3>System Architecture & Design</h3>
+                    <h3>Mathematical Framework</h3>
                     <p>
-                        The project centers on the implementation of an Extended Kalman Filter, a standard algorithm for state estimation in non-linear systems. The EKF linearizes the system around the current state estimate at each time step. The filter operates in a continuous predict-update cycle:
+                        The core of the localization algorithm relies on linearizing the non-linear evolution and observation models. I implemented the following Jacobians to compute the Kalman Gain:
                     </p>
-                    <ol>
-                        <li><strong>Prediction Step:</strong> The robot's state (its posture $[x, y, \theta]^T$) and its covariance (uncertainty) are propagated forward in time using the non-linear motion model derived from the robot's odometry.</li>
-                        <li><strong>Update Step:</strong> When an external measurement is available (i.e., the robot's sensor detects a magnet with a known world position), the Kalman gain is calculated. This gain determines how much the prediction should be corrected based on the innovation (the difference between the actual measurement and the predicted measurement). The state and covariance are then updated.</li>
-                    </ol>
-
-                    <h3>Core Implementation Details</h3>
                     <p>
-                        My main contribution was to complete the core components of this EKF framework in MATLAB:
+                        $$A=\begin{bmatrix}1&0&-v \cdot s\theta\\ 0&1&v \cdot c\theta\\ 0&0&1\end{bmatrix}, B=\begin{bmatrix}c\theta&0\\ s\theta&0\\ 0&1\end{bmatrix}$$
+                    </p>
+                    <p>
+                        I also defined the observation matrix $C$, which relates small state displacements to the expected magnetic sensor measurements based on the robot's distance from detected magnets.
+                    </p>
+
+                    <h3>Characterizing Sensor Noise</h3>
+                    <p>
+                        A significant portion of the lab involved determining the variances for the measurement noise matrix ($Q_\gamma$):
                     </p>
                     <ul>
-                        <li><strong>Motion Model (`EvolutionModel.m`):</strong> I implemented the non-linear function $X_{k+1} = f(X_k, U_k)$ which describes the robot's evolution. This function takes the current posture and the odometry inputs (distance and angle change) and computes the next posture, forming the basis of the prediction step.</li>
-                        <li><strong>EKF Algorithm (`MagnetLoc.m`):</strong> I completed the missing code for the main EKF loop, which involved:
-                            <ul>
-                                <li>Calculating the Jacobians of the evolution model ($A_k$) and the observation model ($C_k$) required for linearization.</li>
-                                <li>Implementing the covariance prediction equation: $P_{k+1|k} = A_k P_{k|k} A_k^T + Q_\alpha$.</li>
-                                <li>Implementing the state and covariance update equations after a measurement is received.</li>
-                            </ul>
-                        </li>
-                        <li><strong>Filter Tuning (`DefineVariances.m`):</strong> This was a critical and practical part of the lab. I was responsible for determining the correct values for the noise covariance matrices. I analyzed the system to estimate the measurement noise variance ($Q_\gamma$) based on the sensor's physical properties (spacing of Reed sensors) and tuned the process noise parameters to account for odometry errors like wheel slippage.</li>
+                        <li><strong>$\sigma_x$:</strong> Based on a maximum detection range of 20mm in the worst case, I assumed a uniform distribution: $\sigma_x = 20/\sqrt{12} \text{ mm}$.</li>
+                        <li><strong>$\sigma_y$:</strong> Since a magnet can trigger up to two adjacent Reed sensors across a 10mm span, I used $\sigma_y = 10/\sqrt{12} \text{ mm}$.</li>
+                        <li><strong>Mahalanobis Distance:</strong> To distinguish between real magnets and sensor noise, I set a threshold of 2.4477 (calculated via `chi2inv` for 2 DOF at 95% confidence).</li>
                     </ul>
-
-                    <h3>Challenges & Solutions</h3>
+                    <h3>Trajectory Analysis & Insights</h3>
                     <p>
-                        The biggest challenge in any Kalman Filter implementation is <strong>tuning the filter</strong>. If the filter is told to trust the odometry too much (low process noise), it will ignore valid sensor measurements and drift. If it trusts the sensors too much (low measurement noise), it can become overly sensitive to sensor errors and produce a jittery, inaccurate estimate.
+                        Testing the implementation across various datasets provided critical insights into the EKF's robustness:
                     </p>
-                    <p>
-                        My solution was a methodical, data-driven tuning process. I started by estimating the measurement noise from the sensor's physical characteristics, as guided by the lab instructions. Then, I iteratively tested different values for the process noise parameters on various datasets. By analyzing the resulting plots (especially the innovation, or error between predicted and actual measurements), I could find a balance where the filter produced a smooth, drift-corrected path that was consistent with both the robot's motion and the ground-truth magnet locations. This hands-on tuning process was key to achieving a robust and accurate localization system.
-                    </p>
+                    <ul>
+                        <li><strong>Correction Gaps:</strong> In the <code>twoloops.txt</code> test, I identified a 3-second gap without magnet detection. The EKF showed an increasing posture variance during this period, which was immediately reduced ("corrected") upon hitting the next magnet at timestamp 17s.</li>
+                        <li><strong>Initial Error Recovery:</strong> I demonstrated that the EKF could dump significant initial human "pointing" errors. Even when starting at incorrect coordinates (e.g., $(0,0)$ instead of $(0,27)$), the EKF made a sharp correction at the first magnet encounter to realign with the true path.</li>
+                        <li><strong>Drift Attribution:</strong> While the odometry path showed a perfect circle (ignoring physics), the EKF revealed slight drift caused by non-point wheel contact and slippage, providing a more "honest" representation of the robot's real-world path.</li>
+                    </ul>
                 </div>
                 
                 <div class="project-detail-sidebar">
                     <h3>Project Information</h3>
-                    <p><strong>Type:</strong> Academic Course Project</p>
-                    <p><strong>Course:</strong> Mobile Robotics</p>
+                    <p><strong>Type:</strong> Academic Lab Report</p>
+                    <p><strong>Institution:</strong> Centrale Nantes</p>
+                    <p><strong>Course:</strong> Mobile Robots (CORO_M1)</p>
                     
                     <h3>Technologies Used</h3>
                     <ul class="tech-list">
                         <li>MATLAB</li>
-                        <li>Extended Kalman Filter</li>
-                        <li>State Estimation</li>
-                        <li>Robotics</li>
-                        <li>Sensor Fusion</li>
+                        <li>Extended Kalman Filter (EKF)</li>
+                        <li>Differential Kinematics</li>
+                        <li>Mahalanobis Distance</li>
+                        <li>Jacobian Linearization</li>
+                        <li>Reed Sensor Fusion</li>
                     </ul>
                 </div>
             </div>
