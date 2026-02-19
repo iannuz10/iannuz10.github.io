@@ -46,10 +46,10 @@
             <div class="star-summary-box">
                 <h2>At a Glance</h2>
                 <ul>
-                    [cite_start]<li><strong>Situation:</strong> Autonomous 2D robots, such as the differential drive (2-0) and bicycle (1-1) models, require precise trajectory tracking that can withstand real-world non-linearities like wheel velocity saturation and chassis calibration errors[cite: 301, 302, 304].</li>
-                    [cite_start]<li><strong>Task:</strong> Implement and evaluate Static Feedback and Lyapunov-based control strategies to determine which approach offers superior resilience against 30% calibration errors in wheel radius and chassis dimensions[cite: 303, 315, 365].</li>
-                    [cite_start]<li><strong>Action:</strong> I derived the kinematic mapping matrices (K) for both robot types and implemented non-linear control laws in MATLAB/Simulink[cite: 334, 482]. [cite_start]I tuned gains (e.g., $K_p$, $K_x$, $K_y$, $K_\theta$) to minimize an energy function $W$ representing posture error[cite: 308, 431, 533].</li>
-                    [cite_start]<li><strong>Result:</strong> Lyapunov-based control proved significantly more robust; it maintained circular motion even during wheel saturation and kept tracking error nearly negligible (reaching 0) during chassis calibration errors, whereas Static Feedback diverged[cite: 441, 459, 565].</li>
+                    <li><strong>Situation:</strong> Autonomous 2D robots, such as the differential drive (2-0) and bicycle (1-1) models, require precise trajectory tracking that can withstand real-world non-linearities like wheel velocity saturation and chassis calibration errors.</li>
+                    <li><strong>Task:</strong> Implement and evaluate Static Feedback and Lyapunov-based control strategies to determine which approach offers superior resilience against 30% calibration errors in wheel radius and chassis dimensions.</li>
+                    <li><strong>Action:</strong> I derived the kinematic mapping matrices (K) for both robot types and implemented non-linear control laws in MATLAB/Simulink. I tuned gains (e.g., $K_p$, $K_x$, $K_y$, $K_\theta$) to minimize an energy function $W$ representing posture error.</li>
+                    <li><strong>Result:</strong> Lyapunov-based control proved significantly more robust; it maintained circular motion even during wheel saturation and kept tracking error nearly negligible (reaching 0) during chassis calibration errors, whereas Static Feedback diverged.</li>
                 </ul>
             </div>
 
@@ -62,23 +62,23 @@
                         The project focused on two distinct kinematic architectures:
                     </p>
                     <ul>
-                        <li><strong>Differential Drive (2-0):</strong> Controlled via linear velocity $v$ and angular velocity $\omega$. [cite_start][cite: 324, 326].</li>
-                        [cite_start]<li><strong>Bicycle-like (1-1):</strong> Controlled via linear velocity $v$ and steering orientation rate $\dot{\beta}$[cite: 469, 476].</li>
+                        <li><strong>Differential Drive (2-0):</strong> Controlled via linear velocity $v$ and angular velocity $\omega$.</li>
+                        <li><strong>Bicycle-like (1-1):</strong> Controlled via linear velocity $v$ and steering orientation rate $\dot{\beta}$.</li>
                     </ul>
                     <p>
                         For Static Feedback, I derived the decoupling matrix $K$ to link control inputs to the velocity of a tracking point $x_p$ located at a distance $d$ ahead of the robot:
-                        [cite_start]$$\dot{x}_{p}=K(\theta).u \implies K=\begin{bmatrix}\cos(\theta)&-d \sin(\theta)\\ \sin(\theta)&d \cos(\theta)\end{bmatrix}$$[cite: 335, 336].
+                        $$\dot{x}_{p}=K(\theta).u \implies K=\begin{bmatrix}\cos(\theta)&-d \sin(\theta)\\ \sin(\theta)&d \cos(\theta)\end{bmatrix}$$.
                     </p>
 
                     <h3>Lyapunov Stability Implementation</h3>
                     <p>
                         To ensure global stability, I implemented a candidate Lyapunov function $W$ to represent the state error:
-                        [cite_start]$$W=\frac{1}{2}(x_{e}^{2}+y_{e}^{2}+\frac{\theta_{e}^{2}}{K_{y}})$$[cite: 387].
+                        $$W=\frac{1}{2}(x_{e}^{2}+y_{e}^{2}+\frac{\theta_{e}^{2}}{K_{y}})$$.
                     </p>
                     <p>
                         I derived the control law such that the time derivative $\dot{W}$ became negative definite:
-                        [cite_start]$$\dot{W}=-K_{x}x_{e}^{2}-K_{y}v_{r}y_{e}^{2}\frac{\sin(\theta_{e})}{\theta_{e}}-\frac{K_{\theta}\theta_{e}^{2}}{K_{y}}$$[cite: 421, 422].
-                        [cite_start]This ensures the robot's error converges to zero regardless of the initial displacement[cite: 427].
+                        $$\dot{W}=-K_{x}x_{e}^{2}-K_{y}v_{r}y_{e}^{2}\frac{\sin(\theta_{e})}{\theta_{e}}-\frac{K_{\theta}\theta_{e}^{2}}{K_{y}}$$.
+                        This ensures the robot's error converges to zero regardless of the initial displacement.
                     </p>
 
                     <h3>Robustness Analysis Findings</h3>
@@ -86,9 +86,9 @@
                         By injecting systematic errors into the Simulink model, I observed critical performance differences:
                     </p>
                     <ul>
-                        [cite_start]<li><strong>Calibration Errors:</strong> When the wheel radius was miscalibrated by 30%, the Static Feedback controller caused the robot to orbit inside the reference path[cite: 366, 372]. [cite_start]The Lyapunov controller, however, remained stable because it does not rely on perfect model inversion[cite: 441, 565].</li>
-                        <li><strong>Actuator Saturation:</strong> Under wheel velocity limits, the differential robot exhibited understeering. [cite_start]However, the Lyapunov energy function still converged toward zero, suggesting the path was followed as closely as physical limits allowed[cite: 376, 460].</li>
-                        [cite_start]<li><strong>Orientation Saturation:</strong> For the bicycle model, orientation limits forced the robot into a "minimal circular motion," tracking the frequency of the desired point even when it couldn't match the radius[cite: 521, 524].</li>
+                        <li><strong>Calibration Errors:</strong> When the wheel radius was miscalibrated by 30%, the Static Feedback controller caused the robot to orbit inside the reference path. The Lyapunov controller, however, remained stable because it does not rely on perfect model inversion.</li>
+                        <li><strong>Actuator Saturation:</strong> Under wheel velocity limits, the differential robot exhibited understeering. However, the Lyapunov energy function still converged toward zero, suggesting the path was followed as closely as physical limits allowed.</li>
+                        <li><strong>Orientation Saturation:</strong> For the bicycle model, orientation limits forced the robot into a "minimal circular motion," tracking the frequency of the desired point even when it couldn't match the radius.</li>
                     </ul>
                 </div>
                 
