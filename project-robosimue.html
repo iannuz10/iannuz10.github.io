@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Details | RoboSimUE Infrastructure</title>
+    <title>Project Details | RoboSimUE</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,20 +27,97 @@
     <main>
         <section class="project-detail-header">
             <h1>RoboSimUE: High-Fidelity Hybrid Robotics Simulation Infrastructure</h1>
-            <p class="project-tagline">A decoupled, ultra-low latency environment bridging the photorealistic rendering of Unreal Engine 5 with the scientific physics of MuJoCo.</p>
+            <p class="project-tagline">A decoupled simulation environment bridging the photorealistic rendering of Unreal Engine 5 with the scientific physics of MuJoCo, achieving sub-3ms latency via Zenoh.</p>
         </section>
 
         <section class="project-detail-content">
-            <div class="video-container">
-                <iframe 
-                    src="https://www.youtube.com/embed/YOUR_VIDEO_ID" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+            <div class="video-container" style="display: flex; justify-content: center; align-items: center; overflow: hidden; background-color: #000;">
+                <img src="images/robosim_screen.png" alt="RoboSimUE Simulation Environment" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
             <div class="star-summary-box">
                 <h2>At a Glance</h2>
                 <ul>
-                    <li><strong>Situation:</strong> Traditional robotic simulators force a trade-off between visual fidelity and physics performance. High-fidelity rendering is crucial for training vision-based World Models and enabling immersive VR teleoperation, but
+                    <li><strong>Situation:</strong> Traditional robotics simulators often force a strict trade-off: prioritize visual fidelity or prioritize physics performance. Generating high-quality synthetic data requires both, but rendering engines drag down physics calculations when coupled together.</li>
+                    <li><strong>Task:</strong> To design and engineer a decoupled "Digital Twin" infrastructure that physically separates Unreal Engine 5's visual rendering (Host) from a Linux-based MuJoCo physics backend (Guest), while maintaining seamless real-time synchronization.</li>
+                    <li><strong>Action:</strong> I built a custom, modular network bridge utilizing Zenoh as a high-performance DDS alternative. The architecture required developing a C++ multithreaded foundation in UE5 to bypass the Game Thread, alongside a highly optimized, vectorized Python backend running inside a Docker container.</li>
+                    <li><strong>Result:</strong> Achieved a highly stable 60Hz bidirectional physics-to-visual loop with a Round-Trip Time (RTT) averaging ~2ms. The system successfully generates dynamic worlds, parses complex JSON state payloads instantly, and supports native MJCF robotic models.</li>
+                </ul>
+            </div>
+
+            <div class="project-detail-grid">
+                <div class="project-detail-text">
+                    <h2>Technical Deep Dive</h2>
+                    
+                    <h3>Host-Guest Topology</h3>
+                    <p>
+                        The infrastructure operates on a strictly decoupled architecture to maximize computational efficiency across environments:
+                    </p>
+                    <ul>
+                        <li><strong>The Host (Unreal Engine 5):</strong> Acts as the "Body" and "Eyes." It runs on a Windows/Mac host machine, dedicating all resources to high-fidelity rendering (Nanite/Lumen), kinematic visualization, and dynamic world serialization.</li>
+                        <li><strong>The Guest (Dockerized Linux):</strong> Acts as the "Brain." It runs an isolated container with Python and MuJoCo. The backend dynamically constructs the physical worldbody in memory based on the initial UE5 payload and calculates continuous physics steps.</li>
+                    </ul>
+
+                    <h3>High-Performance Networking (Zenoh & C++)</h3>
+                    <p>
+                        Achieving real-time synchronization required eliminating artificial latency introduced by standard game engine rendering loops.
+                    </p>
+                    <ul>
+                        <li><strong>Bypassing the Game Thread:</strong> Standard UE5 Blueprints lock network execution to the frame rate (~16ms). I engineered an <code>FRunnable</code> C++ background thread to catch incoming Zenoh packets via an "Envelope Split" architecture. This allows the system to instantly publish network ACKs in microseconds before handing structured data to the Game Thread.</li>
+                        <li><strong>O(1) Memory Caching:</strong> Ripped out expensive <code>GetAllActorsWithTag</code> loop operations by implementing a Just-In-Time (JIT) <code>TWeakObjectPtr</code> mapping system, guaranteeing constant-time memory lookups during the 60Hz visual update cycle.</li>
+                    </ul>
+
+                    <h3>Vectorized Physics Backend (Python)</h3>
+                    <p>
+                        The Guest environment was rigorously profiled and optimized to eliminate Python bottlenecks and OS scheduling jitter.
+                    </p>
+                    <ul>
+                        <li><strong>NumPy Vectorization:</strong> Replaced manual iteration loops with C-compiled NumPy array operations for coordinate conversions (Right-Hand to Left-Hand) and quaternion inversions, processing hundreds of dynamic props simultaneously.</li>
+                        <li><strong>Zero-Copy Serialization:</strong> Replaced standard JSON libraries with the Rust-based <code>orjson</code> library. By directly serializing raw NumPy arrays, the system completely eliminated 100ms+ Python Garbage Collection (GC) spikes, locking the payload processing time to a fraction of a millisecond.</li>
+                        <li><strong>Dynamic Timestep Alignment:</strong> Programmed a dynamic substep calculator that automatically aligns MuJoCo's internal clock with the target host FPS, ensuring the physics simulation never drifts from real-time execution.</li>
+                    </ul>
+
+                    <h3>Mesh Pipeline & Asset Ingestion</h3>
+                    <p>
+                        To ensure 1-to-1 parity between the scientific models and the visual engine, a custom asset pipeline was formalized for importing native <code>.mjcf</code> models:
+                    </p>
+                    <ul>
+                        <li><strong>Automated Conversion:</strong> Created a Python visual-URDF generator to extract standard MuJoCo XMLs, correcting internal mesh offsets automatically.</li>
+                        <li><strong>Blender LinkForge Pipeline:</strong> Utilized Blender plugins to ingest the URDF and export animation-free, cleanly axised <code>glTF 2.0</code> files into Unreal Engine 5.</li>
+                        <li><strong>Blueprint Harvesting:</strong> Converted the raw hierarchical meshes into dynamic UE5 Actors capable of instantly attaching to the C++ simulation receptors.</li>
+                    </ul>
+
+                </div>
+                
+                <div class="project-detail-sidebar">
+                    <h3>Project Information</h3>
+                    <p><strong>Date:</strong> 2026</p>
+                    <p><strong>Type:</strong> Independent Infrastructure Project</p>
+                    <p><strong>Environment:</strong> Windows Host / Linux Docker Guest</p>
+                    
+                    <h3>Technologies Used</h3>
+                    <ul class="tech-list">
+                        <li>Unreal Engine 5 (C++)</li>
+                        <li>Python (Backend Orchestration)</li>
+                        <li>MuJoCo (Physics Engine)</li>
+                        <li>Zenoh (DDS / Networking)</li>
+                        <li>Docker</li>
+                        <li>NumPy / orjson</li>
+                        <li>Multithreading (FRunnable)</li>
+                        <li>Blender / URDF Pipelines</li>
+                    </ul>
+
+                    <div class="sidebar-links">
+                        <a href="https://github.com/iannuz10/UE5BetterSim" target="_blank" class="details-button">View GitHub Repo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
