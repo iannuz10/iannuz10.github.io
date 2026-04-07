@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboSimUE | Antonio Iannone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Specific styles for project details pages (add to style.css if preferred) */
+        .project-detail-section { padding: 100px 5% 50px; max-width: 900px; margin: auto; }
+        .project-header { margin-bottom: 40px; }
+        .project-header h1 { color: #333; font-size: 2.5rem; }
+        .tech-tags { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
+        .tech-tag { background: #e0e0e0; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;}
+        .project-content h2 { margin-top: 30px; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        .project-content p, .project-content li { line-height: 1.6; color: #555; margin-bottom: 15px; }
+        .project-hero-img { width: 100%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;}
+        .back-link { display: inline-block; margin-top: 40px; color: #007BFF; text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Antonio Iannone</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#projects">Back to Portfolio</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="project-detail-section">
+            <div class="project-header">
+                <h1>RoboSimUE: High-Fidelity Hybrid Robotics Simulation Infrastructure</h1>
+                <div class="tech-tags">
+                    <span class="tech-tag">C++</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Unreal Engine 5</span>
+                    <span class="tech-tag">MuJoCo</span>
+                    <span class="tech-tag">Zenoh</span>
+                    <span class="tech-tag">Docker</span>
+                </div>
+                <div class="project-links" style="margin-top: 20px;">
+                    <a href="https://github.com/iannuz10/UE5BetterSim" target="_blank" class="contact-button"><i class="fab fa-github"></i> View Repository</a>
+                </div>
+            </div>
+
+            <img src="images/robosimue_screen.png" alt="RoboSimUE Architecture" class="project-hero-img">
+
+            <div class="project-content">
+                <h2>Overview</h2>
+                <p>RoboSimUE is a decoupled, high-performance robotics simulation environment designed to bridge the gap between photorealistic rendering and scientific physics. Traditional simulators often force a compromise between visual fidelity and physics performance. By decoupling the two architectures across a high-speed network bridge, RoboSimUE allows computational power to be dedicated to each task independently.</p>
+                <p>The system utilizes <strong>Zenoh</strong> as a lightweight, zero-overhead PUB/SUB networking layer to achieve <strong>sub-3ms latency (averaging ~1.7ms RTT)</strong> between the visual engine and the physics backend.</p>
+
+                <h2>Architectural Design (Host-Guest Topology)</h2>
+                <ul>
+                    <li><strong>The Host (Unreal Engine 5):</strong> Acts as the "Body" and "Eyes". It is responsible for high-fidelity rendering (leveraging Nanite and Lumen), sensor simulation, and kinematic visualization.</li>
+                    <li><strong>The Guest (Dockerized Linux):</strong> Acts as the "Brain". It runs a containerized environment handling the physics calculations via <strong>MuJoCo</strong> and future control stacks via <strong>ROS 2</strong>.</li>
+                    <li><strong>Dynamic World Generation:</strong> The UE5 Host serializes the physical environment (static floors, props, custom meshes) into a payload. The Guest receives this and dynamically builds the physical worldbody entirely in memory on the fly.</li>
+                </ul>
+
+                <h2>Key Engineering & Optimizations</h2>
+                <p>Achieving ultra-low latency for real-time digital twinning required strict systems engineering and performance optimization across both languages:</p>
+                <ul>
+                    <li><strong>C++ Multithreading & Asynchronous Deserialization:</strong> Completely bypassed the UE5 Game Thread rendering bottleneck by implementing an <code>FRunnable</code> background thread. Network packets are caught and acknowledged instantly, parsing state updates asynchronously before handing clean data structs back to the Game Thread.</li>
+                    <li><strong>O(1) Memory Caching:</strong> Eliminated $O(N)$ string comparisons and array transversals from the 60Hz physics loop by implementing Just-In-Time (JIT) <code>TWeakObjectPtr</code> actor caching in C++ and dictionary-based manifest mapping in Python.</li>
+                    <li><strong>True Batch Vectorization:</strong> Utilized NumPy to vectorize coordinate transforms (e.g., Left-Handed to Right-Handed conversion, quaternion inversions) entirely in C-space, eliminating Python-level iteration overhead.</li>
+                    <li><strong>Modular Engine Agnosticism:</strong> Architected the backend using Abstract Base Classes (ABCs) and Pydantic data schemas, allowing the core network bridge to function independently of the physics engine. This enables future drop-in replacements like PyBullet or PhysX.</li>
+                </ul>
+
+                <h2>Envisioned Applications</h2>
+                <ul>
+                    <li><strong>Synthetic Data Generation:</strong> Leveraging UE5’s procedural generation capabilities to create environments for training World Models, Vision-Language-Action (VLA) models, and other vision-based learning systems.</li>
+                    <li><strong>VR Teleoperation & HRI:</strong> Fusing sensor data into the UE5 visual layer to allow users to teleoperate robots with high physical fidelity while completely immersed in a realistic digital twin.</li>
+                    <li><strong>Reinforcement Learning (RL):</strong> Providing superior domain-randomization value by training agents over realistic RGB image streams.</li>
+                </ul>
+
+                <a href="index.html#projects" class="back-link">&larr; Back to Projects</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 by Antonio Iannone. Built with simple HTML & CSS.</p>
+    </footer>
+
+</body>
+</html>
